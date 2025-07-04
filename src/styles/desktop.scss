@@ -1,0 +1,24 @@
+#desktop {
+  position: relative;
+  background: url("../../public/widows7wallpaper.jpg");
+  background-size: cover;
+  background-position: center;
+  width: 100vw;
+  height: 100vh;
+
+  user-select: none;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 96px);
+  grid-template-rows: repeat(auto-fill, 96px);
+}
+
+.icon-cell {
+  * {
+    color: red;
+    font-weight: bold;
+  }
+  &:hover {
+    background: rgba(255, 255, 255, 0.391);
+  }
+}
