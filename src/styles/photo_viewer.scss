@@ -1,0 +1,18 @@
+.photo-viewer .control-panel {
+  display: none;
+  position: absolute;
+  left: 50%;
+  bottom: 5%;
+  transform: translate(-50%, -50%);
+}
+
+.photo-viewer:hover {
+  .control-panel {
+    display: block;
+  }
+}
+
+.photo-viewer img {
+  cursor: arrow;
+  user-select: none;
+}

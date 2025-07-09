@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { Dock } from "../components/Dock";
 import { Icon } from "../components/Icon";
+import { Dock } from "../components/Dock";
 import { ContextMenu } from "../components/ContextMenu";
+import { emulate_icons } from "../temp";
+import { Application } from "../components/Application";
+import { useFocus } from "../context/useFocus";
+import { useRunningApps } from "../context/useRunningApps";
 
 function useResize(ref) {
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -24,65 +28,6 @@ function useResize(ref) {
   }, [ref]);
   return size;
 }
-
-const emulate_icons = [
-  {
-    id: "1",
-    src: "/kiz.png",
-    name: "kiz.pngмт ощусцлздчйцбовгытьщфьджбыдвлаьтвлаьды",
-    x: 95,
-    y: 5,
-    actions: ["Open", "Rename", "Move to trash"],
-  },
-  {
-    id: "2",
-    src: "/kiz.png",
-    name: "kiz.png",
-    x: 9,
-    y: 76,
-    actions: ["Open", "Rename", "Move to trash"],
-  },
-  {
-    id: "3",
-    src: "/kiz.png",
-    name: "kiz.png",
-    x: 35,
-    y: 66,
-    actions: ["Open", "Rename", "Move to trash"],
-  },
-  {
-    id: "4",
-    src: "/kiz.png",
-    name: "kiz.png",
-    x: 95,
-    y: 88,
-    actions: ["Open", "Rename", "Move to trash"],
-  },
-  {
-    id: "5",
-    src: "/kiz.png",
-    name: "kiz.png",
-    x: 0,
-    y: 66,
-    actions: ["Open", "Rename", "Move to trash"],
-  },
-  {
-    id: "6",
-    src: "/kiz.png",
-    name: "kiz.png",
-    x: 50,
-    y: 75,
-    actions: ["Open", "Rename", "Move to trash"],
-  },
-  {
-    id: "7",
-    src: "/kiz.png",
-    name: "kiz.png",
-    x: 30,
-    y: 10,
-    actions: ["Open", "Rename", "Move to trash"],
-  },
-];
 
 function arrangeIcons(w = 0, h = 0) {
   if (!w || !h) return;
@@ -110,11 +55,11 @@ function arrangeIcons(w = 0, h = 0) {
     return {};
   });
 
-  // console.log("icons:", icons);
+  console.log("icons:", icons);
 
-  emulate_icons.forEach((item) => {
-    const calibrated_x = item.x * kwidth;
-    const calibrated_y = item.y * kheight;
+  emulate_icons.forEach((icon) => {
+    const calibrated_x = icon.x * kwidth;
+    const calibrated_y = icon.y * kheight;
 
     let target_column = null;
     let target_row = null;
@@ -135,7 +80,7 @@ function arrangeIcons(w = 0, h = 0) {
 
     if (target_row !== null && target_column !== null) {
       const index = target_row * qcols + target_column;
-      icons[index] = item;
+      icons[index] = icon;
     }
   });
 
@@ -143,25 +88,61 @@ function arrangeIcons(w = 0, h = 0) {
 }
 
 export function Desktop() {
-  const desktopRef = useRef(null);
-  const [focused, setFocused] = useState("");
-  const { width, height } = useResize(desktopRef);
+  const iconGridRef = useRef(null);
+  const { width, height } = useResize(iconGridRef);
+  const { focusedId, setFocusedId } = useFocus();
+  const { runningApps, setRunningApps } = useRunningApps();
+
   const [icons, setIcons] = useState();
   const [contextMenu, setContextMenu] = useState();
+  // const [runningApps, setRunningApps] = useState([])
+  // const [runningApps, setRunningApps] = useState([
+  //   {
+  //     id: "app-session-43c56079-b157-4950-9005-cb4dd874f176",
+  //     x: 268,
+  //     y: 181,
+  //     data: {
+  //       extention: ".png",
+  //       id: "file-1",
+  //       name: "kiz",
+  //       open_with: "photo_viewer",
+  //       src: "/kiz.png",
+  //     },
+  //   },
+  // ]);
+
+  function handleLaunchApp(icon) {
+    const appSessionId = `app-session-${crypto.randomUUID()}`;
+
+    setRunningApps((prev) => {
+      return [
+        ...prev,
+        {
+          id: appSessionId,
+          data: icon.data,
+          x: 500,
+          y: 500,
+        },
+      ];
+    });
+
+    console.log(runningApps);
+    setFocusedId(appSessionId);
+  }
 
   function handleSingleClick(item) {
-    console.log("click");
-    return item.id ? setFocused(item) : setFocused("");
+    return item ? setFocusedId(item.id) : setFocusedId("");
   }
+
   function handleDoubleClick(item) {
-    console.log("double click");
-    setFocused("");
+    setFocusedId("");
+    handleLaunchApp(item);
   }
 
   let clickCount = 0;
   let clickTimeout = null;
 
-  function handleClick(item, e) {
+  function handleClick(item) {
     let timeout = 150;
     clickCount++;
 
@@ -188,7 +169,7 @@ export function Desktop() {
     e.preventDefault();
     e.stopPropagation();
 
-    setFocused(item);
+    setFocusedId(item);
 
     let x = e.clientX;
     let y = e.clientY;
@@ -206,6 +187,37 @@ export function Desktop() {
     console.log("context desktop!");
   }
 
+  function handleDrag(e, window) {
+    setFocusedId(window);
+
+    const initX = e.clientX;
+    const initY = e.clientY;
+    const windowX = window.x;
+    const windowY = window.y;
+
+    function handleMouseMove(e) {
+      setRunningApps((prev) =>
+        prev.map((p) =>
+          p.id === window.id
+            ? {
+                ...p,
+                x: windowX + e.clientX - initX,
+                y: windowY + e.clientY - initY,
+              }
+            : p
+        )
+      );
+    }
+
+    function handleMouseUp(e) {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mousedown", handleDrag);
+    }
+
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+  }
+
   useEffect(() => {
     setTimeout(() => {
       setIcons(() => arrangeIcons(width, height));
@@ -214,26 +226,44 @@ export function Desktop() {
 
   return (
     <>
-      <div
-        id="desktop"
-        ref={desktopRef}
-        onContextMenu={(e) => handleContextDesktop(e)}
-      >
-        {contextMenu ? <ContextMenu context={contextMenu} /> : <></>}
-        {icons ? (
-          Array.from(icons).map((item, key) => (
-            <div
-              className={`icon-cell ${focused === item ? "focused" : ""}`}
-              key={key}
-              onClick={(e) => handleClick(item, e)}
-              onContextMenu={(e) => handleContext(item, e)}
-            >
-              {item.src ? <Icon name={item.name} src={item.src} /> : <></>}
-            </div>
-          ))
-        ) : (
-          <></>
-        )}
+      <div id="desktop" onContextMenu={(e) => handleContextDesktop(e)}>
+        {/* {contextMenu ? <ContextMenu context={contextMenu} /> : <></>} */}
+        <div id="apps">
+          {Array.from(runningApps).map((runningApp, key) => {
+            return (
+              <Application
+                key={key}
+                caller={runningApp}
+                onMouseDown={(e) => handleDrag(e, runningApp)}
+              />
+            );
+          })}
+        </div>
+        <div ref={iconGridRef} id="icons-grid">
+          {icons ? (
+            Array.from(icons).map((icon, key) => (
+              <div
+                className={`icon-cell ${
+                  focusedId && focusedId === icon.id ? "focused" : ""
+                }`}
+                key={key}
+                onClick={() => handleClick(icon)}
+                onContextMenu={(e) => handleContext(icon, e)}
+              >
+                {icon.src ? (
+                  <Icon
+                    name={`${icon.name}${icon.data.extention}`}
+                    src={icon.src}
+                  />
+                ) : (
+                  <></>
+                )}
+              </div>
+            ))
+          ) : (
+            <></>
+          )}
+        </div>
       </div>
       <Dock />
     </>
