@@ -1,0 +1,106 @@
+@use "colors";
+@use "mixins";
+
+.window {
+  position: absolute;
+  top: 100px;
+  left: 500px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  min-width: 300px;
+  min-height: 200px;
+  width: 700px;
+  height: 500px;
+  max-width: 100%;
+  max-height: 100%;
+
+  padding: 5px;
+  padding-top: 0;
+
+  // colors
+  @include mixins.glassy-border;
+  border-radius: 5px;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.5);
+  background: radial-gradient(
+      circle at 0% 30%,
+      rgba(255, 255, 255, 0.5) 10%,
+      rgba(0, 170, 255, 0.1) 70%
+    ),
+    radial-gradient(
+      circle at 100% 40%,
+      rgba(255, 255, 255, 0.5) 10%,
+      rgba(0, 170, 255, 0.1) 70%
+    );
+}
+
+.window .window-content {
+  flex: 1;
+  width: 100%;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  // colors
+  @include mixins.glassy-border;
+  background: white;
+  border-radius: 2px;
+  img {
+    max-width: 100%;
+  }
+}
+
+.window nav {
+  display: flex;
+  justify-content: space-between;
+}
+
+.window nav .min-max-close {
+  margin-left: auto;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr 2fr;
+  width: 200px;
+  height: 30px;
+
+  @include mixins.glassy-border($wht-shdw-str: 0.15);
+
+  border-top: none;
+  border-radius: 0 0 5px 5px;
+
+  button {
+    background: none;
+    border: none;
+  }
+
+  .minimize {
+    border-right: 0.5px solid rgba(0, 0, 0, 0.3);
+  }
+
+  .close {
+    border-left: 0.5px solid rgba(0, 0, 0, 0.3);
+  }
+}
+
+.window.minimized {
+  display: none;
+}
+
+.window {
+  transition: top 0.3s cubic-bezier(0.77, 0, 0.175, 1),
+    left 0.3s cubic-bezier(0.77, 0, 0.175, 1),
+    width 0.3s cubic-bezier(0.77, 0, 0.175, 1),
+    height 0.3s cubic-bezier(0.77, 0, 0.175, 1),
+    transform 0.3s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.window.maximized {
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%);
+  margin: auto;
+  width: 99.5%;
+  height: 99%;
+}
