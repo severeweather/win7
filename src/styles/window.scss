@@ -2,29 +2,28 @@
 @use "mixins";
 
 .window {
+  pointer-events: auto;
   position: absolute;
   top: 100px;
   left: 500px;
 
   display: flex;
   flex-direction: column;
-  gap: 8px;
 
   min-width: 300px;
   min-height: 200px;
   width: 700px;
   height: 500px;
-  max-width: 100%;
-  max-height: 100%;
+  max-width: 99%;
+  max-height: 98.5%;
 
-  padding: 5px;
-  padding-top: 0;
+  padding: 0 10px 10px 10px;
 
   // colors
-  @include mixins.glassy-border;
   border-radius: 5px;
   backdrop-filter: blur(5px);
-  box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.5),
+    inset 0 0 2px 2px rgba(255, 255, 255, 0.5);
   background: radial-gradient(
       circle at 0% 30%,
       rgba(255, 255, 255, 0.5) 10%,
@@ -40,35 +39,52 @@
 .window .window-content {
   flex: 1;
   width: 100%;
+  position: relative;
 
   overflow-y: auto;
   overflow-x: hidden;
 
   // colors
-  @include mixins.glassy-border;
-  background: white;
+  background: rgb(27, 27, 27);
   border-radius: 2px;
   img {
-    max-width: 100%;
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    width: 100%;
   }
+  box-shadow: 0 0 2px 2px rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.5);
 }
 
 .window nav {
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+
+  .window-title {
+    text-shadow: 0 0 2px rgba(255, 255, 255, 0.8),
+      0 0 4px rgba(255, 255, 255, 0.6), 0 0 6px rgba(255, 255, 255, 0.4);
+  }
 }
 
 .window nav .min-max-close {
   margin-left: auto;
   display: grid;
-  grid-template-columns: 1.1fr 1fr 2fr;
-  width: 200px;
-  height: 30px;
+  grid-template-columns: 1.1fr 1fr 1.7fr;
+  width: 130px;
+  height: 25px;
 
-  @include mixins.glassy-border($wht-shdw-str: 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: -1px 0 1px rgba(255, 255, 255, 0.5),
+    1px 0 1px rgba(255, 255, 255, 0.5), 0 1px 1px rgba(255, 255, 255, 0.5),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.5),
+    inset 1px 0 1px rgba(255, 255, 255, 0.5),
+    inset -1px 0 1px rgba(255, 255, 255, 0.5);
 
   border-top: none;
-  border-radius: 0 0 5px 5px;
+  border-radius: 0 0 6px 6px;
 
   button {
     background: none;
@@ -76,11 +92,18 @@
   }
 
   .minimize {
-    border-right: 0.5px solid rgba(0, 0, 0, 0.3);
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: inset -1px 0 1px rgba(255, 255, 255, 0.5);
+  }
+
+  .maximize {
+    box-shadow: inset 1px 0 1px rgba(255, 255, 255, 0.5),
+      inset -1px 0 1px rgba(255, 255, 255, 0.5);
   }
 
   .close {
-    border-left: 0.5px solid rgba(0, 0, 0, 0.3);
+    border-left: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: inset 1px 0 1px rgba(255, 255, 255, 0.5);
   }
 }
 
@@ -88,19 +111,73 @@
   display: none;
 }
 
-.window {
-  transition: top 0.3s cubic-bezier(0.77, 0, 0.175, 1),
-    left 0.3s cubic-bezier(0.77, 0, 0.175, 1),
-    width 0.3s cubic-bezier(0.77, 0, 0.175, 1),
-    height 0.3s cubic-bezier(0.77, 0, 0.175, 1),
-    transform 0.3s cubic-bezier(0.77, 0, 0.175, 1);
-}
-
 .window.maximized {
-  top: 50% !important;
-  left: 50% !important;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
   margin: auto;
-  width: 99.5%;
-  height: 99%;
+  width: 100%;
+  height: 100%;
+}
+
+.resizer {
+  position: absolute;
+  z-index: 10;
+  // background-color: rgba(255, 0, 0, 0.526);
+  &.right {
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 2px;
+    cursor: e-resize;
+  }
+  &.left {
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 2px;
+    cursor: w-resize;
+  }
+  &.top {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    cursor: n-resize;
+  }
+  &.bottom {
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    cursor: s-resize;
+  }
+  &.topright {
+    top: 0;
+    right: 0;
+    width: 4px;
+    height: 4px;
+    cursor: ne-resize;
+  }
+  &.bottomright {
+    bottom: 0;
+    right: 0;
+    width: 4px;
+    height: 4px;
+    cursor: se-resize;
+  }
+  &.bottomleft {
+    bottom: 0;
+    left: 0;
+    width: 4px;
+    height: 4px;
+    cursor: sw-resize;
+  }
+  &.topleft {
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 4px;
+    cursor: nw-resize;
+  }
 }

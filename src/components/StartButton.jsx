@@ -1,3 +1,3 @@
 export function StartButton(props) {
-  return <img id="startbutton" src="./output.png" alt=""></img>;
+  return <button type="button" id="startbutton" />;
 }
