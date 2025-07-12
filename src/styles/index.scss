@@ -2,11 +2,10 @@
 
 @use "desktop";
 @use "dock";
-@use "startbutton";
-@use "icon";
 @use "contextmenu";
 @use "window";
 @use "photo_viewer";
+@use "icon";
 
 *,
 *::before,
@@ -23,4 +22,9 @@ body {
   font-family: sans-serif;
   background: #fff;
   color: #000;
+}
+
+button {
+  cursor: pointer;
+  user-select: none;
 }
