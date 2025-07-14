@@ -4,11 +4,7 @@ const RunningApps = createContext();
 
 export function RunningAppsProvider({ children }) {
   const [runningApps, setRunningApps] = useState([
-    {
-      id: "window-001",
-      app: "photo-viewer",
-      data: null,
-    },
+    { id: "", app: "photo-viewer", data: "file-002" },
   ]);
 
   function runApp(app, data) {
@@ -33,7 +29,7 @@ export function RunningAppsProvider({ children }) {
   }, [runningApps]);
 
   return (
-    <RunningApps.Provider value={{ runningApps, runApp }}>
+    <RunningApps.Provider value={{ runningApps, setRunningApps, runApp }}>
       {children}
     </RunningApps.Provider>
   );
