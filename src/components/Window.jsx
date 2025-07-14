@@ -1,12 +1,27 @@
 import { useEffect, useRef, useState } from "react";
+import { useRunningApps } from "../context/useRunningApps";
+import { useDesktop } from "../context/DesktopContext";
 
-export function Window(props) {
+const getRandomCoord = () => Math.floor(Math.random() * 301) + 300;
+
+export function Window({ children, footer, appData }) {
+  const { desktopWidth, desktopHeight } = useDesktop();
+  const { setRunningApps } = useRunningApps();
   const windowRef = useRef(null);
   const [minimized, setMinimized] = useState(false);
   const [maximized, setMaximized] = useState(false);
   const [scale, setScale] = useState({ w: 900, h: 700 });
-  const [position, setPosition] = useState({ x: 400, y: 400 });
-  const [title, setTitle] = useState("Untitled");
+  const [minScale, setMinScale] = useState({ w: 350, h: 250 });
+  const [position, setPosition] = useState({
+    x: getRandomCoord(),
+    y: getRandomCoord(),
+  });
+
+  function terminateWindow() {
+    setRunningApps((prev) =>
+      prev.filter((runningApp) => runningApp.app !== appData.app.id)
+    );
+  }
 
   function handleDrag(e) {
     setMaximized(false);
@@ -20,8 +35,18 @@ export function Window(props) {
       const dy = e.clientY - initY;
 
       setPosition({
-        x: windowX + dx,
-        y: windowY + dy,
+        x:
+          windowX + dx < scale.w / -2
+            ? scale.w / -2
+            : windowX + dx > desktopWidth - scale.w / 2
+            ? desktopWidth - scale.w / 2
+            : windowX + dx,
+        y:
+          windowY + dy < 0
+            ? 0
+            : windowY + dy > desktopHeight - scale.h / 2
+            ? desktopHeight - scale.h / 2
+            : windowY + dy,
       });
     }
 
@@ -62,11 +87,14 @@ export function Window(props) {
           setPosition((prev) => {
             return {
               x: prev.x,
-              y: windowY + dy,
+              y: scale.h <= minScale.h ? windowY : windowY + dy,
             };
           });
           setScale((prev) => {
-            return { w: prev.w, h: windowH - dy };
+            return {
+              w: prev.w,
+              h: windowH - dy < minScale.h ? minScale.h : windowH - dy,
+            };
           });
           break;
         case "left":
@@ -77,17 +105,23 @@ export function Window(props) {
             };
           });
           setScale((prev) => {
-            return { h: prev.h, w: windowW - dx };
+            return {
+              h: prev.h,
+              w: windowW - dx < minScale.w ? minScale.w : windowW - dx,
+            };
           });
           break;
         case "topright":
           setPosition((prev) => {
             return {
               x: prev.x,
-              y: windowY + dy,
+              y: windowH === minScale.h ? windowY : windowY + dy,
             };
           });
-          setScale({ w: windowW + dx, h: windowH - dy });
+          setScale({
+            w: windowW + dx,
+            h: windowH - dy < minScale.h ? minScale.h : windowH - dy,
+          });
           break;
         case "bottomright":
           setScale({ w: windowW + dx, h: windowH + dy });
@@ -106,7 +140,10 @@ export function Window(props) {
             x: windowX + dx,
             y: windowY + dy,
           });
-          setScale({ w: windowW - dx, h: windowH - dy });
+          setScale({
+            w: windowW - dx,
+            h: windowH - dy < minScale.h ? minScale.h : windowH - dy,
+          });
           break;
       }
     }
@@ -135,11 +172,18 @@ export function Window(props) {
         left: position?.x,
         width: scale?.w,
         height: scale?.h,
+        minWidth: minScale?.w,
+        minHeight: minScale?.h,
       }}
     >
-      <div></div>
       <nav className="drag-zone" onMouseDown={(e) => handleDrag(e)}>
-        <span className="window-title">{`Photo Viewer — ${title}`}</span>
+        <span className="window-title">
+          {appData.data
+            ? appData.data.name
+              ? `${appData.data.name} - ${appData.app.name}`
+              : `Untitled - ${appData.app.name}`
+            : appData.app.name}
+        </span>
         <section className="min-max-close">
           <button
             type="button"
@@ -151,42 +195,51 @@ export function Window(props) {
             className="maximize"
             onClick={() => setMaximized(maximized ? false : true)}
           ></button>
-          <button type="button" className="close"></button>
+          <button
+            type="button"
+            className="close"
+            onClick={terminateWindow}
+          ></button>
         </section>
       </nav>
-      <section className="window-content">{props.children}</section>
-      <div
-        className="resizer top"
-        onMouseDown={(e) => handleResize(e, "top")}
-      ></div>
-      <div
-        className="resizer right"
-        onMouseDown={(e) => handleResize(e, "right")}
-      ></div>
-      <div
-        className="resizer bottom"
-        onMouseDown={(e) => handleResize(e, "bottom")}
-      ></div>
-      <div
-        className="resizer left"
-        onMouseDown={(e) => handleResize(e, "left")}
-      ></div>
-      <div
-        className="resizer topright"
-        onMouseDown={(e) => handleResize(e, "topright")}
-      ></div>
-      <div
-        className="resizer bottomright"
-        onMouseDown={(e) => handleResize(e, "bottomright")}
-      ></div>
-      <div
-        className="resizer bottomleft"
-        onMouseDown={(e) => handleResize(e, "bottomleft")}
-      ></div>
-      <div
-        className="resizer topleft"
-        onMouseDown={(e) => handleResize(e, "topleft")}
-      ></div>
+
+      <section className="window-content">{children}</section>
+      <>{footer}</>
+
+      <div /* resize window */>
+        <div
+          className="resizer top"
+          onMouseDown={(e) => handleResize(e, "top")}
+        ></div>
+        <div
+          className="resizer right"
+          onMouseDown={(e) => handleResize(e, "right")}
+        ></div>
+        <div
+          className="resizer bottom"
+          onMouseDown={(e) => handleResize(e, "bottom")}
+        ></div>
+        <div
+          className="resizer left"
+          onMouseDown={(e) => handleResize(e, "left")}
+        ></div>
+        <div
+          className="resizer topright"
+          onMouseDown={(e) => handleResize(e, "topright")}
+        ></div>
+        <div
+          className="resizer bottomright"
+          onMouseDown={(e) => handleResize(e, "bottomright")}
+        ></div>
+        <div
+          className="resizer bottomleft"
+          onMouseDown={(e) => handleResize(e, "bottomleft")}
+        ></div>
+        <div
+          className="resizer topleft"
+          onMouseDown={(e) => handleResize(e, "topleft")}
+        ></div>
+      </div>
     </div>
   );
 }

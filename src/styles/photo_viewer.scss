@@ -1,15 +1,89 @@
-.photo-viewer .control-panel {
-  display: none;
-  position: absolute;
-  left: 50%;
-  bottom: 5%;
-  transform: translate(-50%, -50%);
+.photo-viewer.control-panel {
+  button {
+    height: 100%;
+    background: none;
+    border: none;
+  }
+
+  .wpv-secondary-btn {
+    height: 24px;
+    width: fit-content;
+    img {
+      width: fit-content;
+      height: 100%;
+    }
+  }
+
+  .wpv-prev-next {
+    height: 56px;
+    width: fit-content;
+    img {
+      height: 100%;
+      width: fit-content;
+    }
+  }
+  .wpv-ss {
+    height: 81px;
+    width: fit-content;
+    img {
+      height: 100%;
+      width: fit-content;
+    }
+  }
+
+  padding: 16px 0;
+  height: fit-content;
+  width: fit-content;
+  display: flex;
+  margin: auto;
+  align-items: center;
+  gap: 42px;
+  .main-three {
+    display: flex;
+    align-items: center;
+  }
 }
 
-.photo-viewer:hover {
-  .control-panel {
-    display: block;
+.photo-viewer .menu-bar {
+  padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: fit-content;
+  background: linear-gradient(
+    to bottom,
+    rgb(230, 242, 255) 40%,
+    rgb(202, 230, 255),
+    rgb(214, 233, 255)
+  );
+
+  .menu-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
   }
+
+  button {
+    background: none;
+    border: none;
+  }
+
+  .help-button {
+    background: none;
+    border: none;
+    height: 1.25rem;
+    aspect-ratio: 1 / 1;
+  }
+}
+
+.photo-viewer.menu-button {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  color: rgb(43, 60, 76);
 }
 
 .photo-viewer img {

@@ -1,21 +1,21 @@
 export let icons = [
   {
     id: "icon-001",
-    name: "Untitled",
+    name: "Photo Viewer",
     represents: "photo-viewer",
     x: 10,
     y: 10,
   },
   {
     id: "icon-002",
-    name: "Untitled",
+    name: "OG KIZ",
     represents: "file-001",
     x: 30,
     y: 10,
   },
   {
     id: "icon-003",
-    name: "Untitled",
+    name: "Smart man in glasses wallpaper download",
     represents: "file-002",
     x: 50,
     y: 10,
