@@ -1,16 +1,96 @@
-.icon {
+.icon-container {
+  padding: 0;
+  margin: 0;
+  width: 100%;
   height: 100%;
-  width: fit-content;
-  background: none;
+}
+
+.icon {
+  display: block;
+  width: 100%;
+  height: 100%;
   border: none;
+  background: none;
+}
+
+.icon.desktop-icon {
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 
   img {
-    height: 100%;
-    width: auto;
-    aspect-ratio: 1 / 1;
+    display: block;
+    margin: auto;
+    width: 60px;
+    height: 60px;
+    flex: 0 0;
+    object-fit: contain;
   }
 
   p {
-    
+    font-size: 1rem;
+    color: white;
+    text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.7);
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    line-height: 1.1em;
   }
+}
+
+.icon.desktop-icon:hover {
+  border-radius: 3%;
+  background-color: rgba(170, 220, 255, 0.107);
+  box-shadow: 0 0 0 1px rgba(170, 220, 255, 0.453);
+}
+
+.icon-container.focused {
+  height: fit-content;
+  border-radius: 3%;
+  background-color: rgba(170, 220, 255, 0.458);
+  box-shadow: 0 0 0 1px rgba(170, 220, 255, 0.732);
+
+  p {
+    display: block;
+    overflow: visible;
+    text-overflow: unset;
+  }
+}
+
+.icon.dock-icon {
+  height: 100%;
+  padding: 8px 16px;
+
+  img {
+    margin: auto;
+    display: block;
+    object-fit: contain;
+    height: 100%;
+    width: 54px;
+  }
+}
+
+.icon.dock-icon.running {
+  border-radius: 6px;
+  border: 1px solid rgba(82, 82, 82, 0.349);
+  overflow: hidden;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.3),
+    rgba(181, 181, 181, 0.3)
+  );
+}
+
+.icon.dock-icon.running.focused {
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.5),
+    rgba(181, 181, 181, 0.5)
+  );
 }

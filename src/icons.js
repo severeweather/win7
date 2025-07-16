@@ -8,7 +8,7 @@ export let icons = [
   },
   {
     id: "icon-002",
-    name: "OG KIZ",
+    name: "OG KIZZY",
     represents: "file-001",
     x: 30,
     y: 10,

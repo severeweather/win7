@@ -22,6 +22,22 @@ export const appOrFile = (icon) => {
   return undefined;
 };
 
+// export function appOrFile(icon) {
+//   let represents = [apps, files]
+//     .flat()
+//     .find((entry) => entry.id === icon.represents);
+
+//   if (represents.type === "app") {
+//     return { app: represents.id, data: null };
+//   }
+
+//   let defaultApp =
+//     settings.fileTypes.find((entry) => entry.type === represents.type)
+//       ?.defaultApp || null;
+
+//   return { app: defaultApp, data: represents };
+// }
+
 export const arrangeIcons = (w = 0, h = 0) => {
   if (!w || !h) return;
   setTimeout(() => {}, 1);

@@ -1,17 +1,18 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { useRunningApps } from "../context/useRunningApps";
 import { useDesktop } from "../context/DesktopContext";
+import { useFocus } from "../context/useFocus";
 
 const getRandomCoord = () => Math.floor(Math.random() * 301) + 300;
 
-export function Window({ children, footer, appData }) {
+export function Window({ children, footer, header, appData, minW, minH }) {
   const { desktopWidth, desktopHeight } = useDesktop();
   const { setRunningApps } = useRunningApps();
+  const { focusedId, setFocusedId } = useFocus(appData.app.app);
   const windowRef = useRef(null);
   const [minimized, setMinimized] = useState(false);
-  const [maximized, setMaximized] = useState(false);
   const [scale, setScale] = useState({ w: 900, h: 700 });
-  const [minScale, setMinScale] = useState({ w: 350, h: 250 });
+  const [minScale, setMinScale] = useState({ w: minW, h: minH });
   const [position, setPosition] = useState({
     x: getRandomCoord(),
     y: getRandomCoord(),
@@ -24,7 +25,6 @@ export function Window({ children, footer, appData }) {
   }
 
   function handleDrag(e) {
-    setMaximized(false);
     const initX = e.clientX;
     const initY = e.clientY;
     const windowX = windowRef.current.offsetLeft;
@@ -60,7 +60,6 @@ export function Window({ children, footer, appData }) {
   }
 
   function handleResize(e, direction) {
-    setMaximized(false);
     const initX = e.clientX;
     const initY = e.clientY;
     const windowW = windowRef.current.offsetWidth;
@@ -156,27 +155,37 @@ export function Window({ children, footer, appData }) {
     document.addEventListener("mouseup", mouseUp);
   }
 
+  function handleMaximize() {
+    setScale({ w: desktopWidth, h: desktopHeight });
+    setPosition({ x: 0, y: 0 });
+  }
+
   useEffect(() => {
     console.log(position);
     console.log(scale);
   }, [position]);
 
+  let sizepos = {
+    top: position?.y,
+    left: position?.x,
+    width: scale?.w,
+    height: scale?.h,
+    minWidth: minScale?.w,
+    minHeight: minScale?.h,
+  };
+
   return (
     <div
       ref={windowRef}
-      className={`window ${minimized ? "minimized" : ""} ${
-        maximized ? "maximized" : ""
-      }`}
-      style={{
-        top: position?.y,
-        left: position?.x,
-        width: scale?.w,
-        height: scale?.h,
-        minWidth: minScale?.w,
-        minHeight: minScale?.h,
-      }}
+      className={`window ${minimized ? "minimized" : ""}`}
+      style={sizepos}
+      onClick={() => setFocusedId(appData.app.id)}
     >
-      <nav className="drag-zone" onMouseDown={(e) => handleDrag(e)}>
+      <nav
+        className="window-nav drag-zone"
+        onMouseDown={(e) => handleDrag(e)}
+        onDoubleClick={handleMaximize}
+      >
         <span className="window-title">
           {appData.data
             ? appData.data.name
@@ -193,7 +202,7 @@ export function Window({ children, footer, appData }) {
           <button
             type="button"
             className="maximize"
-            onClick={() => setMaximized(maximized ? false : true)}
+            onClick={handleMaximize}
           ></button>
           <button
             type="button"
@@ -203,6 +212,7 @@ export function Window({ children, footer, appData }) {
         </section>
       </nav>
 
+      <>{header}</>
       <section className="window-content">{children}</section>
       <>{footer}</>
 

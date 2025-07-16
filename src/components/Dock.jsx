@@ -3,29 +3,11 @@ import { StartButton } from "../components/StartButton";
 import { userPreferences } from "../userPreferences";
 import { DockIcon } from "../components/DockIcon";
 import { useRunningApps } from "../context/useRunningApps";
-import { apps } from "../apps";
-import { files } from "../files";
-import { settings } from "../settings";
+import { appOrFile } from "../service";
 
 export function Dock(props) {
   const { runningApps, runApp } = useRunningApps();
   const [dockIcons, setDockIcons] = useState();
-
-  function appOrFile(icon) {
-    let represents = [apps, files]
-      .flat()
-      .find((entry) => entry.id === icon.represents);
-
-    if (represents.type === "app") {
-      return { app: represents.id, data: null };
-    }
-
-    let defaultApp =
-      settings.fileTypes.find((entry) => entry.type === represents.type)
-        ?.defaultApp || null;
-
-    return { app: defaultApp, data: represents };
-  }
 
   function handleClick(icon) {
     const { app, data } = appOrFile(icon);
@@ -42,7 +24,20 @@ export function Dock(props) {
       <section id="dock-icons">
         {dockIcons ? (
           Array.from(dockIcons).map((dockIcon, key) => {
-            return <DockIcon key={key} icon={dockIcon} onClick={handleClick} />;
+            return (
+              <DockIcon
+                running={
+                  Array.from(runningApps).find(
+                    (runningApp) => runningApp.app === dockIcon.represents
+                  )
+                    ? true
+                    : false
+                }
+                key={key}
+                icon={dockIcon}
+                onClick={handleClick}
+              />
+            );
           })
         ) : (
           <></>
