@@ -20,4 +20,11 @@ export let icons = [
     x: 50,
     y: 10,
   },
+  {
+    id: "icon-004",
+    name: "README",
+    represents: "file-003",
+    x: 80,
+    y: 80,
+  },
 ];

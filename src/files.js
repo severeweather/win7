@@ -11,4 +11,11 @@ export let files = [
     name: "smart man in glasses wallpaper download",
     src: "/smigwd.jpg",
   },
+  {
+    id: "file-003",
+    type: "plaintext",
+    name: "README",
+    icon_src: "/notepadicon.png",
+    content: "test",
+  },
 ];

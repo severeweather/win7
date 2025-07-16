@@ -4,7 +4,7 @@ const RunningApps = createContext();
 
 export function RunningAppsProvider({ children }) {
   const [runningApps, setRunningApps] = useState([
-    { id: "", app: "photo-viewer", data: "file-002" },
+    // { id: "", app: "internet-explorer", data: "" },
   ]);
 
   function runApp(app, data) {

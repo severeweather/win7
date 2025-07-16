@@ -49,51 +49,6 @@
   }
 }
 
-.photo-viewer .menu-bar {
-  padding: 0 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: inherit;
-  height: fit-content;
-  background: linear-gradient(
-    to bottom,
-    rgb(230, 242, 255) 40%,
-    rgb(202, 230, 255),
-    rgb(214, 233, 255)
-  );
-
-  .menu-buttons {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-  }
-
-  button {
-    background: none;
-    border: none;
-    width: fit-content;
-  }
-
-  .help-button {
-    background: none;
-    border: none;
-    height: 1.25rem;
-    aspect-ratio: 1 / 1;
-    img {
-      height: 100%;
-      width: auto;
-    }
-  }
-}
-
-.photo-viewer.menu-button {
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  color: rgb(43, 60, 76);
-}
-
 .photo-viewer img {
   cursor: arrow;
   user-select: none;
