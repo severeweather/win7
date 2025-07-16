@@ -2,6 +2,7 @@
 @use "mixins";
 
 .window {
+  z-index: 1;
   pointer-events: auto;
   position: absolute;
   top: 100px;
@@ -184,4 +185,8 @@
     height: 4px;
     cursor: nw-resize;
   }
+}
+
+.window.focused {
+  z-index: 10;
 }

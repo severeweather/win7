@@ -4,5 +4,6 @@ export let settings = {
       type: "picture",
       defaultApp: "photo-viewer",
     },
+    { type: "plaintext", defaultApp: "notepad" },
   ],
 };

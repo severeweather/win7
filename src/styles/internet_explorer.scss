@@ -1,0 +1,128 @@
+.internet-explorer {
+  width: 100%;
+  height: 100%;
+}
+
+.ie-nav {
+  width: 100%;
+  height: 32px;
+  display: flex;
+  gap: 8px;
+
+  margin: 8px 0;
+}
+
+.ie-arrows {
+  width: fit-content;
+  display: flex;
+  background: url("/assets/ie-arws-bc.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+
+  .ie-arrow-back,
+  .ie-arrow-forward {
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    background: none;
+    border: none;
+  }
+
+  .ie-arrow-back {
+    scale: 0.85;
+    background: url("/assets/ie-back.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+  .ie-arrow-forward {
+    scale: 0.85;
+    background: url("/assets/ie-forward.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+}
+
+.ie-searchbar {
+  flex: 1;
+  display: flex;
+  input {
+    flex: 1;
+    border-radius: 3px 0 0 3px;
+    border: 1px solid black;
+  }
+
+  .ie-refresh,
+  .ie-stop-loading {
+    border: 1px solid black;
+    height: 100%;
+    aspect-ratio: 1 / 1;
+  }
+
+  .ie-refresh {
+    background: url("/assets/ie-refresh.svg");
+    background-color: white;
+    background-repeat: no-repeat;
+    background-size: 60%;
+    background-position: center center;
+    border-left: none;
+    border-right: none;
+  }
+
+  .ie-stop-loading {
+    background: url("/assets/ie-stop-loading.svg");
+    background-color: white;
+    background-repeat: no-repeat;
+    background-size: 50%;
+    background-position: center center;
+  }
+}
+
+.ie-search-engines {
+  width: 30%;
+}
+
+.ie-bkmrks-tabs {
+  border-bottom: 1px solid black;
+
+  .ie-bookmarks {
+  }
+
+  .ie-bookmarks-favourites {
+    display: flex;
+    align-items: center;
+    img {
+      height: 24px;
+      width: auto;
+    }
+
+    span {
+      padding-right: 8px;
+      border-right: 1px solid black;
+    }
+  }
+
+  .ie-tabs {
+    display: flex;
+
+    .ie-tab {
+      padding: 8px 16px;
+      background-color: rgb(186, 186, 186);
+      border-radius: 6px 6px 0 0;
+      border: 1px solid gray;
+      border-bottom: none;
+    }
+    .ie-tab.active {
+      padding: 8px 16px;
+      background-color: rgb(223, 223, 223);
+    }
+  }
+}
+
+.ie-tab-content {
+  width: 100%;
+  height: 100%;
+
+  iframe {
+    width: 100%;
+    height: 100%;
+  }
+}
