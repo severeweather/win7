@@ -1,12 +1,16 @@
 import { Icon } from "./Icon";
+import { useFocus } from "../context/useFocus";
 
-export function DockIcon(props) {
+export function DockIcon({ running, icon, onClick }) {
+  const { focusedId } = useFocus();
   return (
-    <div
-      className={`dock-icon ${props.running ? "running" : null}`}
-      onClick={() => props.onClick(props.icon)}
-    >
-      <Icon icon={props.icon} allowName={false} />
-    </div>
+    <Icon
+      xClass={`dock-icon ${running ? "running" : ""} ${
+        focusedId === icon.represents ? "focused" : ""
+      }`}
+      icon={icon}
+      allowName={false}
+      onClick={() => onClick(icon)}
+    />
   );
 }

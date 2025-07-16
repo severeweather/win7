@@ -1,5 +1,13 @@
 import { Icon } from "./Icon";
 
-export function DesktopIcon(props) {
-  return <Icon icon={props.icon} allowName={true} />;
+export function DesktopIcon({ icon, focused, onClick }) {
+  return (
+    <Icon
+      xClass="desktop-icon"
+      icon={icon}
+      focused={focused}
+      allowName={true}
+      onClick={onClick}
+    />
+  );
 }

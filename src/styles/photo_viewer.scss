@@ -1,3 +1,7 @@
+.photo-viewer {
+  width: 100%;
+}
+
 .photo-viewer.control-panel {
   button {
     height: 100%;
@@ -7,27 +11,28 @@
 
   .wpv-secondary-btn {
     height: 24px;
-    width: fit-content;
+    width: auto;
     img {
-      width: fit-content;
       height: 100%;
+      width: auto;
     }
   }
 
   .wpv-prev-next {
     height: 56px;
-    width: fit-content;
+    width: auto;
     img {
       height: 100%;
-      width: fit-content;
+      width: auto;
     }
   }
+
   .wpv-ss {
     height: 81px;
-    width: fit-content;
+    width: auto;
     img {
       height: 100%;
-      width: fit-content;
+      width: auto;
     }
   }
 
@@ -49,9 +54,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: absolute;
-  inset: 0;
-  width: 100%;
+  width: inherit;
   height: fit-content;
   background: linear-gradient(
     to bottom,
@@ -70,6 +73,7 @@
   button {
     background: none;
     border: none;
+    width: fit-content;
   }
 
   .help-button {
@@ -77,6 +81,10 @@
     border: none;
     height: 1.25rem;
     aspect-ratio: 1 / 1;
+    img {
+      height: 100%;
+      width: auto;
+    }
   }
 }
 
@@ -89,4 +97,8 @@
 .photo-viewer img {
   cursor: arrow;
   user-select: none;
+}
+
+.photo-viewer.content * {
+  width: 100%;
 }

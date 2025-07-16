@@ -69,19 +69,21 @@ export function Desktop() {
           </div>
           <div ref={iconGridRef} id="icons-grid">
             {icons ? (
-              Array.from(icons).map((icon, key) => (
-                <div
-                  className={`icon-cell ${
-                    focusedId && focusedId === icon.id ? "focused" : ""
-                  }`}
-                  key={key}
-                  onClick={() => handleClick(icon)}
-                >
-                  {Object.keys(icon).length > 0 ? (
-                    <DesktopIcon icon={icon} />
-                  ) : null}
-                </div>
-              ))
+              Array.from(icons).map((icon, key) =>
+                Object.keys(icon).length > 0 ? (
+                  <DesktopIcon
+                    icon={icon}
+                    key={key}
+                    focused={focusedId && focusedId === icon.id ? true : false}
+                    onClick={() => handleClick(icon)}
+                  />
+                ) : (
+                  <div
+                    className="empty-icon"
+                    onClick={() => setFocusedId()}
+                  ></div>
+                )
+              )
             ) : (
               <></>
             )}

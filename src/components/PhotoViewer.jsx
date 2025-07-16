@@ -13,36 +13,46 @@ function PhotoViewerFile({ appData }) {
       footer={
         <footer className="photo-viewer control-panel">
           <button className="wpv-secondary-btn" type="button">
-            <img src="./wpv-zoom.png" alt="zoom" />
+            <img draggable={false} src="./wpv-zoom.png" alt="zoom" />
           </button>
           <button className="wpv-secondary-btn" type="button">
-            <img src="/wpv-revert.png" alt="revert" />
+            <img draggable={false} src="/wpv-revert.png" alt="revert" />
           </button>
           <div className="main-three">
             <button className="wpv-prev-next" type="button">
-              <img src="/wpv-prev.png" alt="previous" />
+              <img draggable={false} src="/wpv-prev.png" alt="previous" />
             </button>
             <button className="wpv-ss" type="button">
-              <img src="/wpv-slideshow.png" alt="slide show" />
+              <img
+                draggable={false}
+                src="/wpv-slideshow.png"
+                alt="slide show"
+              />
             </button>
             <button className="wpv-prev-next" type="button">
-              <img src="/wpv-next.png" alt="next" />
+              <img draggable={false} src="/wpv-next.png" alt="next" />
             </button>
           </div>
           <button className="wpv-secondary-btn" type="button">
-            <img src="/wpv-ccw.png" alt="rotate counter clockwise " />
+            <img
+              draggable={false}
+              src="/wpv-ccw.png"
+              alt="rotate counter clockwise "
+            />
           </button>
           <button className="wpv-secondary-btn" type="button">
-            <img src="/wpv-cw.png" alt="rotate clockwise " />
+            <img draggable={false} src="/wpv-cw.png" alt="rotate clockwise " />
           </button>
           <button className="wpv-secondary-btn" type="button">
-            <img src="/wpv-trash.png" alt="move to trash " />
+            <img draggable={false} src="/wpv-trash.png" alt="move to trash" />
           </button>
         </footer>
       }
+      minW={1000}
+      minH={500}
     >
       <div className="photo-viewer">
-        <nav className="menu-bar">
+        <header className="menu-bar">
           <section className="menu-buttons">
             <button className="photo-viewer menu-button" type="button">
               File
@@ -61,11 +71,15 @@ function PhotoViewerFile({ appData }) {
             </button>
           </section>
           <button type="button" className="help-button">
-            <img src="help-button.svg" />
+            <img draggable={false} src="help-button.svg" />
           </button>
-        </nav>
-        <section>
-          <img src={appData.data.src} alt={appData.data.name} />
+        </header>
+        <section className="photo-viewer content">
+          <img
+            draggable={false}
+            src={appData.data.src}
+            alt={appData.data.name}
+          />
         </section>
       </div>
     </Window>
