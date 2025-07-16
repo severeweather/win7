@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRunningApps } from "../context/useRunningApps";
 import { useDesktop } from "../context/DesktopContext";
 import { useFocus } from "../context/useFocus";
@@ -12,10 +12,12 @@ export function Window({ children, footer, header, appData, minW, minH }) {
   const windowRef = useRef(null);
   const [minimized, setMinimized] = useState(false);
   const [scale, setScale] = useState({ w: 900, h: 700 });
-  const [minScale, setMinScale] = useState({ w: minW, h: minH });
+  const [minScale, setMinScale] = useState({ w: minW || 800, h: minH || 500 });
   const [position, setPosition] = useState({
-    x: getRandomCoord(),
-    y: getRandomCoord(),
+    // x: getRandomCoord(),
+    // x: getRandomCoord(),
+    y: 200,
+    y: 200,
   });
 
   function terminateWindow() {
@@ -156,8 +158,8 @@ export function Window({ children, footer, header, appData, minW, minH }) {
   }
 
   function handleMaximize() {
-    setScale({ w: desktopWidth, h: desktopHeight });
-    setPosition({ x: 0, y: 0 });
+    setScale({ w: desktopWidth - 16, h: desktopHeight - 67 });
+    setPosition({ x: 8, y: 8 });
   }
 
   useEffect(() => {
@@ -177,7 +179,9 @@ export function Window({ children, footer, header, appData, minW, minH }) {
   return (
     <div
       ref={windowRef}
-      className={`window ${minimized ? "minimized" : ""}`}
+      className={`window ${minimized ? "minimized" : ""} ${
+        focusedId === appData.app.id ? "focused" : ""
+      }`}
       style={sizepos}
       onClick={() => setFocusedId(appData.app.id)}
     >
