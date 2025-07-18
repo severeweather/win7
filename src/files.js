@@ -4,12 +4,14 @@ export let files = [
     type: "picture",
     name: "kiz",
     src: "/kiz.png",
+    location: "desktop",
   },
   {
     id: "file-002",
     type: "picture",
     name: "smart man in glasses wallpaper download",
     src: "/smigwd.jpg",
+    location: "desktop",
   },
   {
     id: "file-003",
@@ -17,5 +19,6 @@ export let files = [
     name: "README",
     icon_src: "/notepadicon.png",
     content: "test",
+    location: "desktop",
   },
 ];
