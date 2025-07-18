@@ -63,7 +63,7 @@ export function FileExplorer({ runningApp }) {
   );
 }
 
-function FileExplorerLocation({ location }) {
+function FileExplorerLocation({ location = "recentfiles" }) {
   const [filesHere, setFilesHere] = useState([]);
 
   useEffect(() => {
