@@ -5,6 +5,7 @@ const RunningApps = createContext();
 export function RunningAppsProvider({ children }) {
   const [runningApps, setRunningApps] = useState([
     // { id: "", app: "internet-explorer", data: "" },
+    { id: "", app: "file-explorer", data: "" },
   ]);
 
   function runApp(app, data) {

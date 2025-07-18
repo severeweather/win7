@@ -1,12 +1,5 @@
 export let icons = [
   {
-    id: "icon-001",
-    name: "Photo Viewer",
-    represents: "photo-viewer",
-    x: 10,
-    y: 10,
-  },
-  {
     id: "icon-002",
     name: "OG KIZZY",
     represents: "file-001",
