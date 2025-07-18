@@ -1,23 +1,36 @@
-import { useEffect, useState } from "react";
+import { act, useEffect, useState } from "react";
 import { Window } from "./Window";
 import { getAppById, getFileById } from "../getters";
 
 export function InternetExplorer({ runningApp }) {
   const [appData, setAppData] = useState({ app: {}, data: {} });
   const [tabs, setTabs] = useState([
-    { id: "tab-001", name: "Google Search", url: "https://google.com/chrome" },
-    { id: "tab-002", name: "Wikipedia", url: "https://wikipedia.com" },
+    {
+      id: "tab-001",
+      name: "Google Chrome Fast & Secure Browser Built to Be Yours",
+      url: "https://google.com/chrome",
+      tabicon: "/iconchrome.png" || "/iexplorer.png",
+    },
+    {
+      id: "tab-002",
+      name: "Cat — Wikipedia",
+      url: "https://en.wikipedia.org/wiki/Cat",
+      tabicon: "/iconwikipedia.png" || "/iexplorer.png",
+    },
   ]);
   const [activeTab, setActiveTab] = useState("tab-001");
 
   useEffect(() => {
     setAppData({
       app: getAppById(runningApp.app),
-      data: getFileById(runningApp.data),
+      data: {
+        name: tabs.find((tab) => tab.id === activeTab).name,
+        icon: tabs.find((tab) => tab.id === activeTab).tabicon,
+      },
     });
 
     console.log(runningApp);
-  }, [runningApp]);
+  }, [runningApp, activeTab]);
 
   return (
     <Window
@@ -29,15 +42,18 @@ export function InternetExplorer({ runningApp }) {
             <button className="ie-arrow-forward"></button>
           </section>
           <section className="ie-searchbar">
-            <input type="search" />
+            <input
+              type="search"
+              value={tabs.find((tab) => tab.id === activeTab).url}
+              placeholder="Search"
+            />
             <button type="button" className="ie-refresh" />
             <button type="button" className="ie-stop-loading" />
           </section>
-          <select className="ie-search-engines">
-            <option>Google</option>
-            <option>Bing</option>
-            <option>Yahoo</option>
-          </select>
+          <section className="ie-search-engines">
+            <img src="/iconbing.png" alt="bing" />
+            <span>Bing</span>
+          </section>
         </nav>
       }
     >
@@ -52,7 +68,12 @@ export function InternetExplorer({ runningApp }) {
           <section className="ie-tabs">
             {Array.from(tabs).map((tab, key) => {
               return (
-                <IETab active={activeTab === tab.id} tabData={tab} key={key} />
+                <IETab
+                  active={activeTab === tab.id}
+                  tabData={tab}
+                  key={key}
+                  onClick={() => setActiveTab(tab.id)}
+                />
               );
             })}
           </section>
@@ -65,9 +86,10 @@ export function InternetExplorer({ runningApp }) {
   );
 }
 
-function IETab({ tabData, active }) {
+function IETab({ tabData, active, onClick }) {
   return (
-    <div className={`ie-tab ${active ? "active" : ""}`}>
+    <div className={`ie-tab ${active ? "active" : ""}`} onClick={onClick}>
+      <img src={tabData.tabicon} alt={tabData.name} />
       <span>{tabData.name}</span>
     </div>
   );

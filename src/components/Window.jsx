@@ -8,7 +8,7 @@ const getRandomCoord = () => Math.floor(Math.random() * 301) + 300;
 export function Window({ children, footer, header, appData, minW, minH }) {
   const { desktopWidth, desktopHeight } = useDesktop();
   const { setRunningApps } = useRunningApps();
-  const { focusedId, setFocusedId } = useFocus(appData.app.app);
+  const { focusedId, setFocusedId } = useFocus(appData?.app.app);
   const windowRef = useRef(null);
   const [minimized, setMinimized] = useState(false);
   const [scale, setScale] = useState({ w: 900, h: 700 });
@@ -22,7 +22,7 @@ export function Window({ children, footer, header, appData, minW, minH }) {
 
   function terminateWindow() {
     setRunningApps((prev) =>
-      prev.filter((runningApp) => runningApp.app !== appData.app.id)
+      prev.filter((runningApp) => runningApp.app !== appData?.app.id)
     );
   }
 
@@ -180,10 +180,10 @@ export function Window({ children, footer, header, appData, minW, minH }) {
     <div
       ref={windowRef}
       className={`window ${minimized ? "minimized" : ""} ${
-        focusedId === appData.app.id ? "focused" : ""
+        focusedId === appData?.app.id ? "focused" : ""
       }`}
       style={sizepos}
-      onClick={() => setFocusedId(appData.app.id)}
+      onClick={() => setFocusedId(appData?.app.id)}
     >
       <nav
         className="window-nav drag-zone"
@@ -191,28 +191,29 @@ export function Window({ children, footer, header, appData, minW, minH }) {
         onDoubleClick={handleMaximize}
       >
         <span className="window-title">
-          {appData.data
-            ? appData.data.name
-              ? `${appData.data.name} - ${appData.app.name}`
-              : `Untitled - ${appData.app.name}`
-            : appData.app.name}
+          <img
+            src={appData?.data.icon ? appData?.data.icon : appData?.app.src}
+          />
+          {appData?.data
+            ? appData?.data.name
+              ? `${appData?.data.name} - ${appData?.app.name}`
+              : `Untitled - ${appData?.app.name}`
+            : appData?.app.name}
         </span>
         <section className="min-max-close">
           <button
             type="button"
             className="minimize"
             onClick={() => setMinimized(true)}
-          ></button>
-          <button
-            type="button"
-            className="maximize"
-            onClick={handleMaximize}
-          ></button>
-          <button
-            type="button"
-            className="close"
-            onClick={terminateWindow}
-          ></button>
+          >
+            <img src="/minimize.svg" alt="minimize" />
+          </button>
+          <button type="button" className="maximize" onClick={handleMaximize}>
+            <img src="/maximize.svg" alt="maximize" />
+          </button>
+          <button type="button" className="close" onClick={terminateWindow}>
+            <img src="/close.svg" alt="close" />
+          </button>
         </section>
       </nav>
 
