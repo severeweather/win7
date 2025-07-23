@@ -1,4 +1,4 @@
-import { Window } from "./Window";
+import { Window } from "../components/Window";
 import { isEmpty } from "../service";
 
 function PhotoViewerRaw() {
@@ -85,10 +85,10 @@ function PhotoViewerFile({ appData }) {
   );
 }
 
-export function PhotoViewer({ appData }) {
-  return isEmpty(appData.data) ? (
+export function PhotoViewer({ runningApp }) {
+  return isEmpty(runningApp.data) ? (
     <PhotoViewerRaw />
   ) : (
-    <PhotoViewerFile appData={appData} />
+    <PhotoViewerFile appData={runningApp} />
   );
 }

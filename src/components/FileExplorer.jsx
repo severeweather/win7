@@ -1,12 +1,26 @@
 import { Window } from "./Window";
-import { files } from "../files";
-import { useEffect, useState } from "react";
-import { File } from "./File";
+import { use, useEffect, useState } from "react";
+import { getEntityById, sysEntities } from "../sysEntities";
+import { Icon } from "./Icon";
+import { useFocus } from "../context/useFocus";
 
 export function FileExplorer({ runningApp }) {
-  const [location, setLocation] = useState("recentfiles");
+  const [appData, setAppData] = useState({ app: {}, data: {} });
+  const [location, setLocation] = useState("desktop");
+
+  useEffect(() => {
+    let app = getEntityById(runningApp.app);
+
+    if (app.type === "app")
+      setAppData({
+        app: app,
+        data: {},
+      });
+  }, [runningApp]);
+
   return (
     <Window
+      appData={appData}
       header={
         <nav className="fe-nav">
           <section className="fe-back-forward"></section>
@@ -63,20 +77,47 @@ export function FileExplorer({ runningApp }) {
   );
 }
 
-function FileExplorerLocation({ location = "recentfiles" }) {
-  const [filesHere, setFilesHere] = useState([]);
+function FileExplorerLocation({ location = "desktop" }) {
+  const namespace = `file-explorer/${location}`;
+  const [gridCellScale, setGridCellScale] = useState({ w: 96, h: 96 });
+  const [entitiesHere, setEntitiesHere] = useState([]);
+  const { focused, setFocused } = useFocus({
+    namespace: namespace,
+    id: null,
+  });
+
+  function handleClick(id) {
+    setFocused({ namespace: namespace, id: id });
+  }
 
   useEffect(() => {
-    const filteredFiles = Array.from(files).filter(
-      (file) => file.location === location
+    const filteredEntities = sysEntities.filter(
+      (entity) => entity.location === location
     );
-    setFilesHere(filteredFiles);
+
+    setEntitiesHere(filteredEntities);
   }, [location]);
 
   return (
-    <div className="fe-location">
-      {filesHere.map((file) => {
-        return <File file={file} onClick={() => console.log("open")} />;
+    <div
+      className="fe-location"
+      style={{
+        gridTemplateColumns: `repeat(auto-fill, ${gridCellScale.w}px)`,
+        gridTemplateRows: `repeat(auto-fill, ${gridCellScale.h}px)`,
+      }}
+    >
+      {entitiesHere.map((entity, key) => {
+        return (
+          <Icon
+            key={`icon${key}`}
+            entityId={entity.id}
+            focused={
+              namespace === focused.namespace && focused.id === entity.id
+            }
+            xClass={`full contrast-text`}
+            onClick={() => handleClick(entity.id)}
+          />
+        );
       })}
     </div>
   );

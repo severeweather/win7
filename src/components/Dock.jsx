@@ -5,7 +5,7 @@ import { DockIcon } from "../components/DockIcon";
 import { useRunningApps } from "../context/useRunningApps";
 import { appOrFile } from "../service";
 
-export function Dock(props) {
+export function Dock() {
   const { runningApps, runApp } = useRunningApps();
   const [dockIcons, setDockIcons] = useState();
 
@@ -22,26 +22,22 @@ export function Dock(props) {
     <footer id="dock">
       <StartButton />
       <section id="dock-icons">
-        {dockIcons ? (
-          Array.from(dockIcons).map((dockIcon, key) => {
-            return (
-              <DockIcon
-                running={
-                  Array.from(runningApps).find(
-                    (runningApp) => runningApp.app === dockIcon.represents
-                  )
-                    ? true
-                    : false
-                }
-                key={key}
-                icon={dockIcon}
-                onClick={handleClick}
-              />
-            );
-          })
-        ) : (
-          <></>
-        )}
+        {dockIcons?.map((dockIcon, key) => {
+          return (
+            <DockIcon
+              key={key}
+              running={
+                runningApps.find(
+                  (runningApp) => runningApp.app.id === dockIcon.shortcutFor
+                )
+                  ? true
+                  : false
+              }
+              icon={dockIcon}
+              onClick={() => handleClick(dockIcon.shortcutFor)}
+            />
+          );
+        })}
       </section>
     </footer>
   );

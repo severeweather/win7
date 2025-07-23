@@ -3,32 +3,26 @@ import { Dock } from "../components/Dock";
 import { Application } from "../components/Application";
 import { useFocus } from "../context/useFocus";
 import { useRunningApps } from "../context/useRunningApps";
-import { DesktopIcon } from "../components/DesktopIcon";
-import { arrangeIcons, appOrFile } from "../service";
+import { arrangeDesktopIcons, appOrFile, isEmpty } from "../service";
 import { useSize } from "../hooks/useSize";
 import { DesktopProvider } from "../context/DesktopContext";
+import { Icon } from "../components/Icon";
 
 export function Desktop() {
+  const namespace = "desktop";
   const desktopRef = useRef(null);
-  const iconGridRef = useRef(null);
-  const { width: iconGridW, height: iconGridH } = useSize(iconGridRef);
+  const desktopGridRef = useRef(null);
+  const { width: desktopGridWidth, height: desktopGridHeight } = useSize(desktopGridRef); //prettier-ignore
   const { width: desktopWidth, height: desktopHeight } = useSize(desktopRef);
-  const { focusedId, setFocusedId } = useFocus();
-  const [icons, setIcons] = useState();
+  const { focused, setFocused } = useFocus({ namespace: namespace, id: null });
+  const [desktopEntities, setDesktopEntities] = useState();
   const { runningApps, runApp } = useRunningApps();
 
   let clickCount = 0;
   let clickTimeout = null;
 
-  function handleClick(icon) {
-    function handleSingleClick(icon) {
-      return icon ? setFocusedId(icon.id) : setFocusedId("");
-    }
-
-    function handleDoubleClick(icon) {
-      const { app, data } = appOrFile(icon);
-      runApp(app, data);
-    }
+  function handleClick(id = null) {
+    if (!id) setFocused({ namespace: namespace, id: null });
 
     let timeout = 150;
     clickCount++;
@@ -39,20 +33,31 @@ export function Desktop() {
 
     clickTimeout = setTimeout(() => {
       if (clickCount === 1) {
-        handleSingleClick(icon);
+        handleSingleClick(id);
       } else if (clickCount === 2) {
-        handleDoubleClick(icon);
+        handleDoubleClick(id);
       }
       clickCount = 0;
       clickTimeout = null;
     }, timeout);
+
+    function handleSingleClick(id) {
+      setFocused({ namespace: namespace, id: id });
+    }
+
+    function handleDoubleClick(id) {
+      const { app, data } = appOrFile(id);
+      runApp(app, data);
+    }
   }
 
   useEffect(() => {
     setTimeout(() => {
-      setIcons(() => arrangeIcons(iconGridW, iconGridH));
+      setDesktopEntities(() =>
+        arrangeDesktopIcons(desktopGridWidth, desktopGridHeight)
+      );
     }, 250);
-  }, [iconGridW, iconGridH]);
+  }, [desktopGridWidth, desktopGridHeight]);
 
   return (
     <>
@@ -60,33 +65,33 @@ export function Desktop() {
         <DesktopProvider value={{ desktopWidth, desktopHeight }}>
           <div id="apps">
             {Array.from(runningApps).length > 0 ? (
-              Array.from(runningApps).map((runningApp, key) => {
+              runningApps.map((runningApp, key) => {
                 return <Application key={key} runningApp={runningApp} />;
               })
             ) : (
               <></>
             )}
           </div>
-          <div ref={iconGridRef} id="icons-grid">
-            {icons ? (
-              Array.from(icons).map((icon, key) =>
-                Object.keys(icon).length > 0 ? (
-                  <DesktopIcon
-                    icon={icon}
-                    key={key}
-                    focused={focusedId && focusedId === icon.id ? true : false}
-                    onClick={() => handleClick(icon)}
-                  />
-                ) : (
-                  <div
-                    className="empty-icon"
-                    onClick={() => setFocusedId()}
-                  ></div>
-                )
-              )
-            ) : (
-              <></>
-            )}
+          <div ref={desktopGridRef} id="icons-grid">
+            {desktopEntities?.map((entity, key) => {
+              return isEmpty(entity) ? (
+                <div
+                  className="icon-cell"
+                  key={key}
+                  onClick={() => handleClick()}
+                ></div>
+              ) : (
+                <Icon
+                  key={`icon${key}`}
+                  entityId={entity.id}
+                  focused={
+                    namespace === focused.namespace && focused.id === entity.id
+                  }
+                  xClass={`full`}
+                  onClick={() => handleClick(entity.id)}
+                />
+              );
+            })}
           </div>
         </DesktopProvider>
       </div>

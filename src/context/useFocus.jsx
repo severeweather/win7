@@ -3,13 +3,17 @@ import { createContext, useContext, useEffect, useState } from "react";
 const FocusContext = createContext();
 
 export function FocusProvider({ children }) {
-  const [focusedId, setFocusedId] = useState(null);
+  const [focused, setFocused] = useState({
+    namespace: null,
+    id: null,
+  });
 
   useEffect(() => {
-    console.log("focused:", focusedId);
-  }, [focusedId]);
+    console.log("focused:", focused);
+  }, [focused]);
+
   return (
-    <FocusContext.Provider value={{ focusedId, setFocusedId }}>
+    <FocusContext.Provider value={{ focused, setFocused }}>
       {children}
     </FocusContext.Provider>
   );

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Window } from "./Window";
+import { Window } from "../components/Window";
 import { getEntityById } from "../sysEntities";
 import { isEmpty } from "../service";
 
@@ -69,25 +69,9 @@ function NotepadFile({ appData }) {
 }
 
 export function Notepad({ runningApp }) {
-  const [appData, setAppData] = useState({ app: {}, data: {} });
-
-  useEffect(() => {
-    let app = getEntityById(runningApp.app);
-    let data = getEntityById(runningApp.data);
-
-    if (app.type === "app" && data.type !== "app")
-      setAppData({ app: app, data: data });
-    else return;
-  }, [runningApp]);
-
-  const appEmpty = isEmpty(appData.app);
-  const dataEmpty = isEmpty(appData.data);
-
-  return appEmpty ? (
-    <></>
-  ) : dataEmpty ? (
+  return isEmpty(runningApp.data) ? (
     <NotepadRaw />
   ) : (
-    <NotepadFile appData={appData} />
+    <NotepadFile appData={runningApp} />
   );
 }

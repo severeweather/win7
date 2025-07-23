@@ -1,9 +1,9 @@
 export let userPreferences = {
   desktopIcons: [],
   dockIcons: [
-    { id: "dock-001", represents: "internet-explorer" },
-    { id: "dock-002", represents: "file-explorer" },
-    { id: "dock-003", represents: "notepad" },
+    { id: "dock-001", shortcutFor: "internet-explorer" },
+    { id: "dock-002", shortcutFor: "file-explorer" },
+    { id: "dock-003", shortcutFor: "notepad" },
   ],
   apps: [
     {
