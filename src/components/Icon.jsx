@@ -1,32 +1,53 @@
-import { apps } from "../apps";
-import { files } from "../files";
+import { useEffect, useState } from "react";
+import { getEntityById } from "../sysEntities";
 
-const searchRange = [apps, files];
+export function Icon({
+  entityId,
+  allowName = true,
+  focused,
+  xClass,
+  yClass,
+  onClick,
+}) {
+  const [entityData, setEntityData] = useState();
 
-export function Icon({ allowName, icon, focused, xClass, onClick }) {
-  const represents = searchRange
-    .flat()
-    .find((item) => item.id === icon.represents);
+  useEffect(() => {
+    const entity = getEntityById(entityId);
+    if (!entity) return;
 
-  return (
+    setEntityData({
+      ...entity,
+      iconSrc: entity.iconSrc
+        ? entity.iconSrc
+        : (() => {
+            switch (entity.type) {
+              case "picture":
+                return entity.content;
+              case "plaintext":
+                return "/notepadicon.png";
+              default:
+                return "/picthumbnail.png";
+            }
+          })(),
+    });
+  }, [entityId]);
+
+  return entityData ? (
     <div
-      className={`icon-container ${focused ? "focused" : ""}`}
-      onClick={onClick}
+      className={`icon-container ${focused ? "focused" : ""} ${yClass}`}
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick();
+      }}
     >
-      <button type="button" className={`icon ${xClass ? xClass : ""}`}>
-        <img
-          src={
-            represents.src
-              ? represents.src
-              : represents.icon_src
-              ? represents.icon_src
-              : "/picthumbnail.png"
-          }
-          alt={represents.name}
-          draggable={false}
-        />
-        {allowName ? <p>{icon.name ? icon.name : "Untitled"}</p> : null}
-      </button>
+      <div className={`icon ${xClass ? xClass : ""}`}>
+        <img src={entityData.iconSrc} alt={entityData.name} draggable={false} />
+        {allowName ? (
+          <p>{entityData.name ? entityData.name : "Untitled"}</p>
+        ) : null}
+      </div>
     </div>
+  ) : (
+    <></>
   );
 }

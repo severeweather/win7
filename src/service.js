@@ -1,46 +1,32 @@
-import { apps } from "./apps";
-import { files } from "./files";
-import { icons as storedIcons } from "./icons";
+import { sysEntities, getEntityById } from "./sysEntities";
 import { settings } from "./settings";
 
-export const appOrFile = (icon) => {
-  let representsApp = apps.find((entry) => entry.id === icon.represents);
-  let representsFile = files.find((entry) => entry.id === icon.represents);
+export const appOrFile = (id) => {
+  const entity = getEntityById(id);
 
-  if (representsApp) {
-    return { app: icon.represents };
-  }
+  console.log(entity);
 
-  if (representsFile) {
-    let defaultApp =
-      settings.fileTypes.find((entry) => entry.type === representsFile.type)
+  if (entity.type === "app") {
+    return { app: entity };
+  } else {
+    const defaultApp =
+      settings.fileTypes.find((entry) => entry.type === entity.type)
         ?.defaultApp || null;
 
-    return { app: defaultApp, data: icon.represents };
-  }
+    if (!defaultApp === null) return;
 
-  return undefined;
+    const app = getEntityById(defaultApp);
+    return { app: app, data: entity };
+  }
 };
 
-// export function appOrFile(icon) {
-//   let represents = [apps, files]
-//     .flat()
-//     .find((entry) => entry.id === icon.represents);
-
-//   if (represents.type === "app") {
-//     return { app: represents.id, data: null };
-//   }
-
-//   let defaultApp =
-//     settings.fileTypes.find((entry) => entry.type === represents.type)
-//       ?.defaultApp || null;
-
-//   return { app: defaultApp, data: represents };
-// }
-
-export const arrangeIcons = (w = 0, h = 0) => {
+export const arrangeDesktopIcons = (w = 0, h = 0) => {
   if (!w || !h) return;
-  setTimeout(() => {}, 1);
+
+  const desktopEntities = sysEntities.filter(
+    (entity) => entity.location === "desktop"
+  );
+
   const iconWxH = 96;
   const qcols = Math.floor(w / iconWxH);
   const qrows = Math.floor(h / iconWxH);
@@ -57,9 +43,9 @@ export const arrangeIcons = (w = 0, h = 0) => {
   const icons = Array.from({ length: qcols * qrows }).map(() => {
     return {};
   });
-  storedIcons.forEach((icon) => {
-    const calibrated_x = icon.x * kwidth;
-    const calibrated_y = icon.y * kheight;
+  desktopEntities.forEach((icon) => {
+    const calibrated_x = icon.posX * kwidth;
+    const calibrated_y = icon.posY * kheight;
     let target_column = null;
     let target_row = null;
     for (let i = 0; i < range_x.length; i++) {
@@ -81,3 +67,5 @@ export const arrangeIcons = (w = 0, h = 0) => {
   });
   return icons;
 };
+
+export const isEmpty = (obj) => Object.keys(obj).length === 0;

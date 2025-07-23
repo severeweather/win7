@@ -5,10 +5,22 @@ import { useFocus } from "../context/useFocus";
 
 const getRandomCoord = () => Math.floor(Math.random() * 301) + 300;
 
-export function Window({ children, footer, header, appData, minW, minH }) {
+export function Window({
+  allowTitle = true,
+  children,
+  footer,
+  header,
+  appData,
+  minW,
+  minH,
+}) {
+  const namespace = "openWindows";
   const { desktopWidth, desktopHeight } = useDesktop();
   const { setRunningApps } = useRunningApps();
-  const { focusedId, setFocusedId } = useFocus(appData?.app.app);
+  const { focused, setFocused } = useFocus({
+    namespace: namespace,
+    id: appData.app.id,
+  });
   const windowRef = useRef(null);
   const [minimized, setMinimized] = useState(false);
   const [scale, setScale] = useState({ w: 900, h: 700 });
@@ -22,8 +34,9 @@ export function Window({ children, footer, header, appData, minW, minH }) {
 
   function terminateWindow() {
     setRunningApps((prev) =>
-      prev.filter((runningApp) => runningApp.app !== appData?.app.id)
+      prev.filter((runningApp) => runningApp.app.id !== appData?.app.id)
     );
+    setFocused({ namespace: "desktop", id: null });
   }
 
   function handleDrag(e) {
@@ -176,30 +189,41 @@ export function Window({ children, footer, header, appData, minW, minH }) {
     minHeight: minScale?.h,
   };
 
+  const windowTitle = `${
+    appData.data
+      ? appData.data.name
+        ? `${appData.data.name} - ${appData.app.name}`
+        : `Untitled - ${appData.app.name}`
+      : appData.app.name
+  }`;
+
   return (
     <div
       ref={windowRef}
       className={`window ${minimized ? "minimized" : ""} ${
-        focusedId === appData?.app.id ? "focused" : ""
+        focused.namespace === namespace && focused.id === appData.app.id
+          ? "focused"
+          : ""
       }`}
       style={sizepos}
-      onClick={() => setFocusedId(appData?.app.id)}
+      onClick={() => setFocused({ namespace: namespace, id: appData.app.id })}
     >
       <nav
         className="window-nav drag-zone"
         onMouseDown={(e) => handleDrag(e)}
         onDoubleClick={handleMaximize}
       >
-        <span className="window-title">
-          <img
-            src={appData?.data.icon ? appData?.data.icon : appData?.app.src}
-          />
-          {appData?.data
-            ? appData?.data.name
-              ? `${appData?.data.name} - ${appData?.app.name}`
-              : `Untitled - ${appData?.app.name}`
-            : appData?.app.name}
-        </span>
+        {allowTitle ? (
+          <span className="window-title">
+            <img
+              src={appData.app.iconSrc}
+              alt={`${appData.data?.name} title icon`}
+            />
+            {windowTitle}
+          </span>
+        ) : (
+          <></>
+        )}
         <section className="min-max-close">
           <button
             type="button"

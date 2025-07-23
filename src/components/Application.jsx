@@ -1,10 +1,10 @@
-import { PhotoViewer } from "./PhotoViewer";
-import { Notepad } from "./Notepad";
-import { InternetExplorer } from "./InternetExplorer";
-import { FileExplorer } from "./FileExplorer";
+import { PhotoViewer } from "../apps/PhotoViewer";
+import { Notepad } from "../apps/Notepad";
+import { InternetExplorer } from "../apps/InternetExplorer";
+import { FileExplorer } from "../apps/FileExplorer";
 
 export function Application({ runningApp }) {
-  switch (runningApp.app) {
+  switch (runningApp.app.id) {
     case "photo-viewer":
       return <PhotoViewer runningApp={runningApp} />;
     case "notepad":

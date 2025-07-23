@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Window } from "./Window";
+import { Window } from "../components/Window";
 import { getEntityById } from "../sysEntities";
 
 export function InternetExplorer({ runningApp }) {

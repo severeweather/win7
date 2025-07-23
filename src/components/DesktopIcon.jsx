@@ -1,10 +1,10 @@
 import { Icon } from "./Icon";
 
-export function DesktopIcon({ icon, focused, onClick }) {
+export function DesktopIcon({ entityId, focused, onClick }) {
   return (
     <Icon
       xClass="desktop-icon"
-      icon={icon}
+      entityId={entityId}
       focused={focused}
       allowName={true}
       onClick={onClick}
