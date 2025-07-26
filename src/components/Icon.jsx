@@ -34,16 +34,25 @@ export function Icon({
 
   return entityData ? (
     <div
-      className={`icon-container ${focused ? "focused" : ""} ${yClass}`}
+      className={`icon__wrapper ${focused ? "focused" : ""} ${yClass}`}
       onClick={(e) => {
         e.stopPropagation();
         onClick();
       }}
     >
-      <div className={`icon ${xClass ? xClass : ""}`}>
-        <img src={entityData.iconSrc} alt={entityData.name} draggable={false} />
+      <div className={`icon ${xClass ? xClass : null}`}>
+        <div className="icon__icon-wrapper">
+          <img
+            className="icon__icon"
+            src={entityData.iconSrc}
+            alt={entityData.name}
+            draggable={false}
+          />
+        </div>
         {allowName ? (
-          <p>{entityData.name ? entityData.name : "Untitled"}</p>
+          <p className="icon__title">
+            {entityData.name ? entityData.name : "Untitled"}
+          </p>
         ) : null}
       </div>
     </div>
