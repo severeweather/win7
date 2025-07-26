@@ -87,7 +87,7 @@ function MenuBar({ menuItems, modifier }) {
 export function FileExplorer({ runningApp }) {
   const namespace = `file-explorer/${runningApp.id}`;
   const { focused, setFocused } = useFocus();
-  const [location, setLocation] = useState("Computer/Desktop");
+  const [location, setLocation] = useState("Computer/Desktop/Folderr");
   const rootLocation = location.split("/").filter(Boolean)[0];
   const targetLocation = location.split("/").filter(Boolean).pop();
   const [menuBarItems] = useState([
