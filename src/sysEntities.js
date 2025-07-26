@@ -33,6 +33,7 @@ export const sysEntities = [
     posX: 50,
     posY: 50,
   },
+
   {
     id: "photo-viewer",
     type: "app",
