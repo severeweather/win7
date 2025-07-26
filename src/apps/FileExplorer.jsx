@@ -1,8 +1,11 @@
 import { Window } from "../components/Window";
-import { useEffect, useState } from "react";
-import { sysEntities } from "../sysEntities";
+import { useEffect, useMemo, useState } from "react";
+import { getEntityById, sysEntities } from "../sysEntities";
 import { Icon } from "../components/Icon";
 import { useFocus } from "../context/useFocus";
+import { useClick } from "../hooks/useClick";
+import { appOrFile } from "../service";
+import { useRunningApps } from "../context/useRunningApps";
 
 const icons = {
   Computer: "/mypc-icon.svg",
@@ -14,6 +17,7 @@ const icons = {
   Music: "/music-icon.svg",
   Pictures: "/pictures-icon.svg",
   "Local Disk": "/diskc-icon.svg",
+  Folder: "/folder-icon.svg",
 };
 
 function Origin({ children, src, name }) {
@@ -22,6 +26,7 @@ function Origin({ children, src, name }) {
       <header className="fe-origin__header">
         <div className="fe-origin__header-icon-wrapper">
           <img
+            alt=""
             src={src}
             className="fe-origin__header-icon"
             aria-hidden={true}
@@ -42,6 +47,7 @@ function OriginItem({ onClick, src, name, active = false }) {
     >
       <div className="fe-origin__list-item-icon-wrapper">
         <img
+          alt=""
           src={src}
           className="fe-origin__list-item-icon"
           aria-hidden={true}
@@ -67,6 +73,7 @@ function MenuBar({ menuItems, modifier }) {
       <section className="menubar__single-buttons">
         <button type="button" className="menubar__single-button">
           <img
+            alt=""
             src="/help-button.svg"
             aria-hidden={true}
             className="menubar__single-button-image"
@@ -78,10 +85,12 @@ function MenuBar({ menuItems, modifier }) {
 }
 
 export function FileExplorer({ runningApp }) {
+  const namespace = `file-explorer/${runningApp.id}`;
+  const { focused, setFocused } = useFocus();
   const [location, setLocation] = useState("Computer/Desktop");
   const rootLocation = location.split("/").filter(Boolean)[0];
   const targetLocation = location.split("/").filter(Boolean).pop();
-  const [menuBarItems, setMenuBarItems] = useState([
+  const [menuBarItems] = useState([
     "Organize",
     "Open",
     "Share with",
@@ -89,6 +98,80 @@ export function FileExplorer({ runningApp }) {
     "E-mail",
     "Burn",
   ]);
+
+  function LocationInfo({ location }) {
+    const [counter, setCounter] = useState(0);
+
+    useEffect(() => {
+      const count = sysEntities.filter(
+        (entity) => entity.location === location
+      ).length;
+      setCounter(count);
+    }, [location]);
+
+    return (
+      <div className="fe-footer__location-info">
+        <label className="fe-footer__label">
+          {counter} Item{counter !== 1 ? "s" : null}
+        </label>
+      </div>
+    );
+  }
+
+  function EntityInfo({ entity }) {
+    return (
+      <div className="fe-footer__entity-info">
+        <span>{entity.name}</span>
+        <label className="fe-footer__label">{entity.type}</label>
+        <span>
+          <label className="fe-footer__label">Date modified:</label>{" "}
+          {entity.dateModified}
+        </span>
+        <span>
+          <label className="fe-footer__label">Size:</label> {entity.size}
+        </span>
+        <span>
+          <label className="fe-footer__label">Date created:</label>{" "}
+          {entity.dateCreated}
+        </span>
+      </div>
+    );
+  }
+
+  const locationInfo = useMemo(
+    () => <LocationInfo location={location} />,
+    [location]
+  );
+
+  const [focusedInfo, setFocusedInfo] = useState({
+    icon: icons[targetLocation] ?? icons["Folder"],
+    info: locationInfo,
+  });
+
+  useEffect(() => {
+    if (focused.namespace !== namespace || focused.id === "file-explorer") {
+      setFocusedInfo({
+        icon: icons[targetLocation] ?? icons["Folder"],
+        info: locationInfo,
+      });
+      return;
+    }
+
+    const entity = getEntityById(focused.id);
+    if (entity) {
+      setFocusedInfo({
+        icon: entity.content,
+        info: <EntityInfo entity={entity} />,
+      });
+    } else {
+      let counter = 0;
+      sysEntities.map((entity) => {
+        if (entity.location === location) counter++;
+      });
+
+      setFocusedInfo({ items: counter });
+    }
+  }, [focused]);
 
   return (
     <Window
@@ -99,6 +182,7 @@ export function FileExplorer({ runningApp }) {
           <section className="fe-navigation__arrows">
             <div className="fe-navigation__arrow-wrapper">
               <img
+                alt=""
                 src="/arrow-back-icon.svg"
                 className="fe-navigation__arrow"
                 aria-hidden={true}
@@ -106,6 +190,7 @@ export function FileExplorer({ runningApp }) {
             </div>
             <div className="fe-navigation__arrow-wrapper">
               <img
+                alt=""
                 src="/arrow-forward-icon.svg"
                 className="fe-navigation__arrow"
                 aria-hidden={true}
@@ -115,6 +200,7 @@ export function FileExplorer({ runningApp }) {
           <section className="fe-navigation__path">
             <div className="fe-navigation__path-icon-wrapper">
               <img
+                alt=""
                 className="fe-navigation__path-icon fe-navigation__path-item"
                 src={icons[rootLocation]}
                 aria-hidden={true}
@@ -137,7 +223,6 @@ export function FileExplorer({ runningApp }) {
           />
         </nav>
       }
-      footer={<></>}
     >
       <div className="file-explorer">
         <MenuBar modifier="fe-menubar" menuItems={menuBarItems} />
@@ -194,23 +279,48 @@ export function FileExplorer({ runningApp }) {
             />
           </Origin>
         </section>
-        <FileExplorerLocation location={location} />
+        <FileExplorerLocation
+          location={location}
+          setLocation={setLocation}
+          namespace={namespace}
+        />
+        <footer className="fe-footer">
+          <div className="fe-footer__icon-wrapper">
+            <img
+              alt=""
+              aria-hidden={true}
+              className="fe-footer__icon"
+              src={focusedInfo.icon || icons[location] || icons["Folder"]}
+            />
+          </div>
+          <div className="fe-footer__entity-info">{focusedInfo.info}</div>
+        </footer>
       </div>
     </Window>
   );
 }
 
-function FileExplorerLocation({ location = "Desktop" }) {
-  const namespace = `file-explorer/${location}`;
-  const [gridCellScale, setGridCellScale] = useState({ w: 96, h: 96 });
+function FileExplorerLocation({ location, setLocation, namespace }) {
+  const [gridCellScale] = useState({ w: 96, h: 96 });
   const [entitiesHere, setEntitiesHere] = useState([]);
   const { focused, setFocused } = useFocus({
     namespace: namespace,
     id: null,
   });
+  const handleClick = useClick();
+  const { runApp } = useRunningApps();
 
-  function handleClick(id) {
-    setFocused({ namespace: namespace, id: id });
+  function doubleClick(entity) {
+    switch (entity.type) {
+      case "folder":
+        setLocation(`${entity.location}/${entity.name}`);
+        setFocused((prev) => ({ ...prev, id: null }));
+        break;
+      case ("app", "picture", "plaintext"):
+        const { app, data } = appOrFile(entity.id);
+        runApp(app, data);
+        break;
+    }
   }
 
   useEffect(() => {
@@ -248,7 +358,13 @@ function FileExplorerLocation({ location = "Desktop" }) {
                 namespace === focused.namespace && focused.id === entity.id
               }
               xClass={`full contrast-text`}
-              onClick={() => handleClick(entity.id)}
+              onClick={() =>
+                handleClick({
+                  id: entity.id,
+                  namespace: namespace,
+                  doubleClick: () => doubleClick(entity),
+                })
+              }
             />
           );
         })}
