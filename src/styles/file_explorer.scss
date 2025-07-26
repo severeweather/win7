@@ -3,7 +3,7 @@
   height: 100%;
   display: grid;
   grid-template-columns: 2fr 8fr;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto 1fr auto;
 }
 
 // MOVE .menubar TO A SEPARATE FILE !!!!!!!!!!!!!!!!!!!!!!
@@ -11,9 +11,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px;
+  padding: 8px 16px;
   border-bottom: 1px solid rgb(188, 188, 188);
-  background: linear-gradient(to top, rgb(213, 231, 255), rgb(241, 247, 255));
+  background: linear-gradient(to top, rgb(217, 226, 237), rgb(255, 255, 255));
 
   .menubar__dropdowns {
     display: flex;
@@ -29,7 +29,8 @@
       text-overflow: ellipsis;
       max-width: 70px;
       font-size: 1rem;
-      color: rgb(47, 107, 171);
+      color: rgb(30, 69, 110);
+      cursor: pointer;
     }
   }
 
@@ -182,11 +183,11 @@
       cursor: pointer;
 
       &.active {
-        border-radius: 4px;
-        box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3);
+        border-radius: 2px;
+        box-shadow: inset 0 0 3px rgba(119, 138, 152, 0.432);
         background: linear-gradient(
           to top,
-          rgba(0, 0, 0, 0.1),
+          rgba(145, 170, 189, 0.3),
           rgba(255, 255, 255, 0.1) 70%
         );
       }
@@ -246,5 +247,38 @@
 
   .fe-location__grid {
     display: grid;
+  }
+}
+
+.fe-footer {
+  grid-row: 3;
+  grid-column: span 2;
+  padding: 12px 24px;
+  background-color: white;
+  border-top: 1px solid lightgray;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  .fe-footer__icon-wrapper {
+    height: 48px;
+    aspect-ratio: 1 / 1;
+
+    .fe-footer__icon {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+
+  .fe-footer__entity-info {
+    display: grid;
+    grid-auto-flow: column; /* fill columns top-to-bottom, then move right */
+    grid-template-rows: repeat(2, auto); /* only two rows per column */
+    gap: 4px 16px; /* row-gap column-gap */
+  }
+
+  .fe-footer__label {
+    color: gray;
   }
 }
