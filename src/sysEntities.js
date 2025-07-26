@@ -9,6 +9,9 @@ export const sysEntities = [
     name: "kiz",
     content: "/kiz.png",
     location: "Computer/Desktop",
+    size: "2 Mb",
+    dateModified: "25/07/2025 01:07:34",
+    dateCreated: "25/07/2025 00:07:34",
     posX: 90,
     posY: 50,
   },
@@ -41,6 +44,7 @@ export const sysEntities = [
     type: "app",
     name: "Notepad",
     iconSrc: "/notepadicon.png",
+    location: "Computer/Desktop/New Folder",
   },
   {
     id: "internet-explorer",
@@ -53,5 +57,15 @@ export const sysEntities = [
     type: "app",
     name: "File Explorer",
     iconSrc: "/fileexplorer.png",
+  },
+  {
+    id: "folder-1",
+    type: "folder",
+    name: "New Folder",
+    iconSrc: "/folder-icon.svg",
+    location: "Computer/Desktop",
+    dateCreated: "26/07/2025 04:10:00",
+    dateModified: "26/07/2025 04:11:00",
+    size: "10Mb",
   },
 ];
