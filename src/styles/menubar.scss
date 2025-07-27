@@ -1,0 +1,46 @@
+.menubar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  border-bottom: 1px solid rgb(188, 188, 188);
+  background: linear-gradient(to top, rgb(217, 226, 237), rgb(255, 255, 255));
+
+  .menubar__dropdowns {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    max-width: 75%;
+    overflow-x: auto;
+
+    .menubar__dropdown-item {
+      flex-shrink: 0;
+      text-wrap: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 70px;
+      font-size: 1rem;
+      color: rgb(30, 69, 110);
+      cursor: pointer;
+    }
+  }
+
+  .menubar__single-buttons {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    height: 100%;
+
+    .menubar__single-button {
+      border: none;
+      background: none;
+      height: 16px;
+      aspect-ratio: 1 / 1;
+
+      .menubar__single-button-image {
+        height: 100%;
+        width: 100%;
+      }
+    }
+  }
+}

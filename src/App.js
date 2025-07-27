@@ -6,15 +6,15 @@ import { RunningAppsProvider } from "./context/useRunningApps";
 
 function App() {
   return (
-    <RunningAppsProvider>
-      <FocusProvider>
+    <FocusProvider>
+      <RunningAppsProvider>
         <Router>
           <Routes>
             <Route path="/" element={<Desktop />} />
           </Routes>
         </Router>
-      </FocusProvider>
-    </RunningAppsProvider>
+      </RunningAppsProvider>
+    </FocusProvider>
   );
 }
 

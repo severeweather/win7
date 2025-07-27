@@ -1,94 +1,103 @@
 import { Window } from "../components/Window";
+import { MenuBar } from "../components/MenuBar";
 import { isEmpty } from "../service";
+import { useState } from "react";
+import { sysEntities } from "../sysEntities";
 
-function PhotoViewerRaw() {
-  return;
-}
-
-function PhotoViewerFile({ appData }) {
-  return (
-    <Window
-      appData={appData}
-      footer={
-        <footer className="photo-viewer control-panel">
-          <button className="wpv-secondary-btn" type="button">
-            <img draggable={false} src="./wpv-zoom.png" alt="zoom" />
-          </button>
-          <button className="wpv-secondary-btn" type="button">
-            <img draggable={false} src="/wpv-revert.png" alt="revert" />
-          </button>
-          <div className="main-three">
-            <button className="wpv-prev-next" type="button">
-              <img draggable={false} src="/wpv-prev.png" alt="previous" />
-            </button>
-            <button className="wpv-ss" type="button">
-              <img
-                draggable={false}
-                src="/wpv-slideshow.png"
-                alt="slide show"
-              />
-            </button>
-            <button className="wpv-prev-next" type="button">
-              <img draggable={false} src="/wpv-next.png" alt="next" />
-            </button>
-          </div>
-          <button className="wpv-secondary-btn" type="button">
-            <img
-              draggable={false}
-              src="/wpv-ccw.png"
-              alt="rotate counter clockwise "
-            />
-          </button>
-          <button className="wpv-secondary-btn" type="button">
-            <img draggable={false} src="/wpv-cw.png" alt="rotate clockwise " />
-          </button>
-          <button className="wpv-secondary-btn" type="button">
-            <img draggable={false} src="/wpv-trash.png" alt="move to trash" />
-          </button>
-        </footer>
-      }
-      minW={1000}
-      minH={500}
-    >
-      <div className="photo-viewer">
-        <header className="menu-bar">
-          <section className="menu-buttons">
-            <button className="photo-viewer menu-button" type="button">
-              File
-            </button>
-            <button className="photo-viewer menu-button" type="button">
-              Print
-            </button>
-            <button className="photo-viewer menu-button" type="button">
-              E-mail
-            </button>
-            <button className="photo-viewer menu-button" type="button">
-              Burn
-            </button>
-            <button className="photo-viewer menu-button" type="button">
-              Open
-            </button>
-          </section>
-          <button type="button" className="help-button">
-            <img draggable={false} src="help-button.svg" />
-          </button>
-        </header>
-        <section className="photo-viewer content">
-          <img
-            draggable={false}
-            src={appData.data.content}
-            alt={appData.data.name}
-          />
-        </section>
+function ControlPanel({ counter, stopCount }) {
+  function Button({ type = "", alt = "", src = "", onClick }) {
+    return (
+      <div
+        className={`pv-control-panel__button-wrapper ${
+          type ? `pv-control-panel__${type}-button-wrapper` : ""
+        }`}
+        onClick={onClick}
+      >
+        <img
+          className="pv-control-panel__button"
+          src={src}
+          alt={alt}
+          draggable={false}
+        />
       </div>
-    </Window>
+    );
+  }
+
+  return (
+    <section className="pv-control-panel">
+      <section className="pv-control-panel__wing">
+        <Button src="wpv-zoom.png" />
+        <Button src="wpv-revert.png" />
+      </section>
+      <section className="pv-control-panel__head">
+        <Button
+          type="arrow"
+          src="wpv-prev.png"
+          onClick={() => counter((prev) => (prev > 0 ? prev - 1 : prev))}
+        />
+        <Button type="slideshow" src="wpv-slideshow.png" />
+        <Button
+          type="arrow"
+          src="wpv-next.png"
+          onClick={() =>
+            counter((prev) => (prev < stopCount - 1 ? prev + 1 : prev))
+          }
+        />
+      </section>
+      <section className="pv-control-panel__wing">
+        <Button src="wpv-ccw.png" />
+        <Button src="wpv-cw.png" />
+        <Button src="wpv-trash.png" />
+      </section>
+    </section>
   );
 }
 
 export function PhotoViewer({ runningApp }) {
-  return isEmpty(runningApp.data) ? (
-    <PhotoViewerRaw />
-  ) : (
-    <PhotoViewerFile appData={runningApp} />
+  const [menuBarItems] = useState([
+    "File",
+    "Open",
+    "Share with",
+    "Print",
+    "E-mail",
+    "Burn",
+  ]);
+  const [pictures, setPictures] = useState(
+    sysEntities.filter((entity) => entity.type === "picture")
+  );
+  const [pictureCounter, setPictureCounter] = useState(0);
+
+  const empty = isEmpty(runningApp.data);
+
+  return (
+    <Window
+      appData={{ app: runningApp.app, data: pictures[pictureCounter] }}
+      footer={
+        <ControlPanel counter={setPictureCounter} stopCount={pictures.length} />
+      }
+      minW={550}
+      minH={350}
+    >
+      <div className="photo-viewer">
+        <MenuBar menuItems={menuBarItems} />
+        <section className="photo-viewer__content">
+          {empty ? (
+            <img
+              className="photo-viewer__displayed-image"
+              draggable={false}
+              src={pictures[pictureCounter].content}
+              alt={pictures[pictureCounter].name}
+            />
+          ) : (
+            <img
+              className="photo-viewer__displayed-image"
+              draggable={false}
+              src={runningApp.data.content}
+              alt={runningApp.data.name}
+            />
+          )}
+        </section>
+      </div>
+    </Window>
   );
 }

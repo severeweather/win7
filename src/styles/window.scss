@@ -2,7 +2,7 @@
 @use "mixins";
 
 .window {
-  z-index: 1;
+  z-index: 0;
   pointer-events: auto;
   position: absolute;
   top: 100px;
@@ -24,24 +24,24 @@
   border-radius: 5px;
   backdrop-filter: blur(5px);
   box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.5),
-    inset 0 0 2px 2px rgba(255, 255, 255, 0.5);
+    inset 0 0 2px 2px rgba(203, 203, 203, 0.5);
   background: radial-gradient(
       circle at 0% 30%,
       rgba(255, 255, 255, 0.5) 10%,
-      rgba(0, 170, 255, 0.1) 70%
+      rgba(53, 69, 77, 0.1) 70%
     ),
     radial-gradient(
       circle at 100% 40%,
       rgba(255, 255, 255, 0.5) 10%,
-      rgba(0, 170, 255, 0.1) 70%
+      rgba(54, 75, 85, 0.1) 70%
     );
 }
 
 .window .window-content {
-  display: flex;
-  flex: 1;
   overflow-y: auto;
   overflow-x: auto;
+  width: 100%;
+  height: 100%;
 
   // colors
   background: white;
@@ -61,7 +61,6 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 0.8rem;
     text-shadow: 0 0 2px rgba(255, 255, 255, 0.8),
       0 0 4px rgba(255, 255, 255, 0.6), 0 0 6px rgba(255, 255, 255, 0.4);
     img {
@@ -225,6 +224,20 @@
 
 .window.focused {
   z-index: 10;
+  border-radius: 5px;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.5),
+    inset 0 0 2px 2px rgba(255, 255, 255, 0.5);
+  background: radial-gradient(
+      circle at 0% 30%,
+      rgba(255, 255, 255, 0.5) 10%,
+      rgba(0, 170, 255, 0.1) 70%
+    ),
+    radial-gradient(
+      circle at 100% 40%,
+      rgba(255, 255, 255, 0.5) 10%,
+      rgba(0, 170, 255, 0.1) 70%
+    );
 }
 
 .minimize,
