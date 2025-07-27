@@ -6,6 +6,7 @@ import { useFocus } from "../context/useFocus";
 import { useClick } from "../hooks/useClick";
 import { appOrFile } from "../service";
 import { useRunningApps } from "../context/useRunningApps";
+import { MenuBar } from "../components/MenuBar";
 
 const icons = {
   Computer: "/mypc-icon.svg",
@@ -55,32 +56,6 @@ function OriginItem({ onClick, src, name, active = false }) {
       </div>
       <span className="fe-origin__list-item-title">{name}</span>
     </li>
-  );
-}
-
-function MenuBar({ menuItems, modifier }) {
-  return (
-    <section className={`menubar ${modifier}`}>
-      <section className="menubar__dropdowns">
-        {menuItems.map((menuItem, key) => {
-          return (
-            <span key={key} className="menubar__dropdown-item">
-              {menuItem}
-            </span>
-          );
-        })}
-      </section>
-      <section className="menubar__single-buttons">
-        <button type="button" className="menubar__single-button">
-          <img
-            alt=""
-            src="/help-button.svg"
-            aria-hidden={true}
-            className="menubar__single-button-image"
-          />
-        </button>
-      </section>
-    </section>
   );
 }
 
@@ -160,7 +135,7 @@ export function FileExplorer({ runningApp }) {
     const entity = getEntityById(focused.id);
     if (entity) {
       setFocusedInfo({
-        icon: entity.content,
+        icon: entity.iconSrc || entity.content,
         info: <EntityInfo entity={entity} />,
       });
     } else {
@@ -283,6 +258,7 @@ export function FileExplorer({ runningApp }) {
           location={location}
           setLocation={setLocation}
           namespace={namespace}
+          isLibrary={location.includes("Libraries")}
         />
         <footer className="fe-footer">
           <div className="fe-footer__icon-wrapper">
@@ -300,7 +276,12 @@ export function FileExplorer({ runningApp }) {
   );
 }
 
-function FileExplorerLocation({ location, setLocation, namespace }) {
+function FileExplorerLocation({
+  location,
+  setLocation,
+  namespace,
+  isLibrary = false,
+}) {
   const [gridCellScale] = useState({ w: 96, h: 96 });
   const [entitiesHere, setEntitiesHere] = useState([]);
   const { focused, setFocused } = useFocus({
@@ -334,9 +315,13 @@ function FileExplorerLocation({ location, setLocation, namespace }) {
   return (
     <div className="fe-location">
       <header className="fe-location__header">
-        <h2 className="fe-location__title">
-          {location.split("/").filter(Boolean).pop()}
-        </h2>
+        {isLibrary ? (
+          <h2 className="fe-location__title">
+            {location.split("/").filter(Boolean).pop() + " library"}
+          </h2>
+        ) : (
+          <div></div>
+        )}
         <div className="fe-location__arrange">
           <span className="fe-location__arrange-label">Arrange by:</span>
           <span className="fe-location__arrange-option">Folder</span>

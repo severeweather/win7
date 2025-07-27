@@ -27,8 +27,8 @@ export function Window({
   const [minScale, setMinScale] = useState({ w: minW || 800, h: minH || 500 });
   const [position, setPosition] = useState({
     // x: getRandomCoord(),
-    // x: getRandomCoord(),
-    y: 200,
+    // y: getRandomCoord(),
+    x: 200,
     y: 200,
   });
 
@@ -97,68 +97,84 @@ export function Window({
             return { w: prev.w, h: windowH + dy };
           });
           break;
-        case "top":
-          setPosition((prev) => {
-            return {
+        case "top": {
+          const newHeightTop = windowH - dy;
+          if (newHeightTop >= minScale.h) {
+            setPosition((prev) => ({
               x: prev.x,
-              y: scale.h <= minScale.h ? windowY : windowY + dy,
-            };
-          });
-          setScale((prev) => {
-            return {
+              y: windowY + dy,
+            }));
+            setScale((prev) => ({
               w: prev.w,
-              h: windowH - dy < minScale.h ? minScale.h : windowH - dy,
-            };
-          });
+              h: newHeightTop,
+            }));
+          } else {
+            setScale((prev) => ({
+              w: prev.w,
+              h: minScale.h,
+            }));
+          }
           break;
-        case "left":
-          setPosition((prev) => {
-            return {
+        }
+        case "left": {
+          const newWidthLeft = windowW - dx;
+          if (newWidthLeft >= minScale.w) {
+            setPosition((prev) => ({
               y: prev.y,
               x: windowX + dx,
-            };
-          });
-          setScale((prev) => {
-            return {
+            }));
+            setScale((prev) => ({
               h: prev.h,
-              w: windowW - dx < minScale.w ? minScale.w : windowW - dx,
-            };
-          });
+              w: newWidthLeft,
+            }));
+          } else {
+            setScale((prev) => ({
+              h: prev.h,
+              w: minScale.w,
+            }));
+          }
           break;
-        case "topright":
-          setPosition((prev) => {
-            return {
-              x: prev.x,
-              y: windowH === minScale.h ? windowY : windowY + dy,
-            };
-          });
+        }
+        case "topright": {
+          const newHeightTR = windowH - dy;
+          setPosition((prev) => ({
+            x: prev.x,
+            y: newHeightTR >= minScale.h ? windowY + dy : prev.y,
+          }));
           setScale({
             w: windowW + dx,
-            h: windowH - dy < minScale.h ? minScale.h : windowH - dy,
+            h: newHeightTR >= minScale.h ? newHeightTR : minScale.h,
           });
           break;
+        }
         case "bottomright":
           setScale({ w: windowW + dx, h: windowH + dy });
           break;
-        case "bottomleft":
-          setPosition((prev) => {
-            return {
-              y: prev.y,
-              x: windowX + dx,
-            };
-          });
-          setScale({ h: windowH + dy, w: windowW - dx });
-          break;
-        case "topleft":
-          setPosition({
-            x: windowX + dx,
-            y: windowY + dy,
-          });
+        case "bottomleft": {
+          const newWidthBL = windowW - dx;
+          setPosition((prev) => ({
+            y: prev.y,
+            x: newWidthBL >= minScale.w ? windowX + dx : prev.x,
+          }));
           setScale({
-            w: windowW - dx,
-            h: windowH - dy < minScale.h ? minScale.h : windowH - dy,
+            h: windowH + dy,
+            w: newWidthBL >= minScale.w ? newWidthBL : minScale.w,
           });
           break;
+        }
+        case "topleft": {
+          const newWidthTL = windowW - dx;
+          const newHeightTL = windowH - dy;
+          setPosition((prev) => ({
+            x: newWidthTL >= minScale.w ? windowX + dx : prev.x,
+            y: newHeightTL >= minScale.h ? windowY + dy : prev.y,
+          }));
+          setScale({
+            w: newWidthTL >= minScale.w ? newWidthTL : minScale.w,
+            h: newHeightTL >= minScale.h ? newHeightTL : minScale.h,
+          });
+          break;
+        }
       }
     }
 
