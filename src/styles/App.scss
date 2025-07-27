@@ -1,0 +1,45 @@
+.starting-windows {
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  position: relative;
+  overflow: hidden; /* отключаем скроллы */
+  display: flex; /* flex-контейнер */
+  justify-content: center; /* центрируем по горизонтали */
+  align-items: center; /* центрируем по вертикали */
+  text-align: center;
+
+  .starting-windows__boot-screen {
+    height: 100%; /* на всю высоту родителя */
+    width: auto; /* ширина пропорциональная */
+
+    display: block;
+  }
+
+  .starting-windows__title {
+    text-wrap: nowrap;
+    position: absolute;
+    color: rgb(225, 225, 225);
+    background-color: black;
+    padding: 36px;
+    left: 50%;
+    transform: translate(-50%);
+    bottom: 25%;
+    font-size: 33px;
+    font-family: "Segoe UI", "Open Sans", "Roboto", sans-serif;
+    font-weight: 300;
+  }
+  .starting-windows__copyright {
+    position: absolute;
+    color: rgb(64, 64, 64);
+    background-color: black;
+    padding: 36px;
+    text-wrap: nowrap;
+    left: 50%;
+    transform: translate(-50%);
+    bottom: 1%;
+    font-size: 20px;
+    font-family: "Segoe UI", "Open Sans", "Roboto", sans-serif;
+    font-weight: 300;
+  }
+}
