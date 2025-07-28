@@ -25,13 +25,14 @@
     }
 
     &:hover {
+      border-radius: 4px;
+
       background: linear-gradient(
         to bottom,
         rgba(53, 137, 255, 0.129),
         #007afd0b
       );
 
-      border-radius: 4px;
       .icon-container {
         border-right: none;
       }

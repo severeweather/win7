@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRunningApps } from "../context/useRunningApps";
-import { useDesktop } from "../context/DesktopContext";
+import { useDesktop } from "../pages/Desktop";
 import { useFocus } from "../context/useFocus";
-
-const getRandomCoord = () => Math.floor(Math.random() * 301) + 300;
 
 export function Window({
   allowTitle = true,
@@ -24,10 +22,8 @@ export function Window({
   const windowRef = useRef(null);
   const [minimized, setMinimized] = useState(false);
   const [scale, setScale] = useState({ w: 900, h: 700 });
-  const [minScale, setMinScale] = useState({ w: minW || 800, h: minH || 500 });
+  const [minScale] = useState({ w: minW || 800, h: minH || 500 });
   const [position, setPosition] = useState({
-    // x: getRandomCoord(),
-    // y: getRandomCoord(),
     x: 200,
     y: 200,
   });
@@ -175,6 +171,7 @@ export function Window({
           });
           break;
         }
+        default:
       }
     }
 
@@ -194,7 +191,7 @@ export function Window({
   useEffect(() => {
     console.log(position);
     console.log(scale);
-  }, [position]);
+  }, [position, scale]);
 
   let sizepos = {
     top: position?.y,

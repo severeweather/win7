@@ -5,16 +5,16 @@ const RunningApps = createContext();
 
 export function RunningAppsProvider({ children }) {
   const [runningApps, setRunningApps] = useState([
-    {
-      app: {
-        id: "photo-viewer",
-        type: "app",
-        name: "Windows Photo Viewer",
-        iconSrc: "/pictures-icon.svg",
-      },
-      data: {},
-      id: "window-750",
-    },
+    // {
+    //   app: {
+    //     id: "photo-viewer",
+    //     type: "app",
+    //     name: "Windows Photo Viewer",
+    //     iconSrc: "/pictures-icon.svg",
+    //   },
+    //   data: {},
+    //   id: "window-750",
+    // },
   ]);
   const { setFocused } = useFocus();
 
