@@ -22,15 +22,15 @@
 }
 
 .pv-control-panel {
-  & * {
-    // border: 1px solid red;
-  }
-
   padding: 12px 0;
   margin: auto;
   display: flex;
   align-items: center;
   gap: 8px;
+
+  & * {
+    // border: 1px solid red;
+  }
 
   .pv-control-panel__wing {
     height: 100%;

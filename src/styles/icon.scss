@@ -35,6 +35,12 @@
       text-overflow: ellipsis;
     }
   }
+  .icon.white-text {
+    .icon__title {
+      color: white;
+      text-shadow: 0 0 3px black;
+    }
+  }
 }
 
 .icon__wrapper.focused {
@@ -51,8 +57,8 @@
   .icon__title {
     display: block;
     text-overflow: unset;
-    overflow: visible;
     text-shadow: 0 0 3px white, 0 0 2px white, 0 0 1px white;
+    overflow: visible;
   }
 }
 

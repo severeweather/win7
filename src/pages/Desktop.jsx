@@ -5,8 +5,20 @@ import { useFocus } from "../context/useFocus";
 import { useRunningApps } from "../context/useRunningApps";
 import { arrangeDesktopIcons, appOrFile, isEmpty } from "../service";
 import { useSize } from "../hooks/useSize";
-import { DesktopProvider } from "../context/DesktopContext";
 import { Icon } from "../components/Icon";
+import { useClick } from "../hooks/useClick";
+
+import { createContext, useContext } from "react";
+
+const DesktopContext = createContext();
+
+export const useDesktop = () => useContext(DesktopContext);
+
+export function DesktopProvider({ children, value }) {
+  return (
+    <DesktopContext.Provider value={value}>{children}</DesktopContext.Provider>
+  );
+}
 
 export function Desktop() {
   const namespace = "desktop";
@@ -14,41 +26,14 @@ export function Desktop() {
   const desktopGridRef = useRef(null);
   const { width: desktopGridWidth, height: desktopGridHeight } = useSize(desktopGridRef); //prettier-ignore
   const { width: desktopWidth, height: desktopHeight } = useSize(desktopRef);
-  const { focused, setFocused } = useFocus({ namespace: namespace, id: null });
+  const { focused } = useFocus({ namespace: namespace, id: null });
   const [desktopEntities, setDesktopEntities] = useState();
   const { runningApps, runApp } = useRunningApps();
+  const handleClick = useClick();
 
-  let clickCount = 0;
-  let clickTimeout = null;
-
-  function handleClick(id = null) {
-    if (!id) setFocused({ namespace: namespace, id: null });
-
-    let timeout = 150;
-    clickCount++;
-
-    if (clickTimeout) {
-      clearTimeout(clickTimeout);
-    }
-
-    clickTimeout = setTimeout(() => {
-      if (clickCount === 1) {
-        handleSingleClick(id);
-      } else if (clickCount === 2) {
-        handleDoubleClick(id);
-      }
-      clickCount = 0;
-      clickTimeout = null;
-    }, timeout);
-
-    function handleSingleClick(id) {
-      setFocused({ namespace: namespace, id: id });
-    }
-
-    function handleDoubleClick(id) {
-      const { app, data } = appOrFile(id);
-      runApp(app, data);
-    }
+  function doubleClick(id) {
+    const { app, data } = appOrFile(id);
+    runApp(app, data);
   }
 
   useEffect(() => {
@@ -78,7 +63,13 @@ export function Desktop() {
                 <div
                   className="icon-cell"
                   key={key}
-                  onClick={() => handleClick()}
+                  onClick={() =>
+                    handleClick({
+                      id: null,
+                      namespace: namespace,
+                      doubleClick: null,
+                    })
+                  }
                 ></div>
               ) : (
                 <Icon
@@ -87,8 +78,14 @@ export function Desktop() {
                   focused={
                     namespace === focused.namespace && focused.id === entity.id
                   }
-                  xClass={`full`}
-                  onClick={() => handleClick(entity.id)}
+                  xClass={`white-text`}
+                  onClick={() =>
+                    handleClick({
+                      id: entity.id,
+                      namespace: namespace,
+                      doubleClick: () => doubleClick(entity.id),
+                    })
+                  }
                 />
               );
             })}

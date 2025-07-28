@@ -24,7 +24,7 @@ export const arrangeDesktopIcons = (w = 0, h = 0) => {
   if (!w || !h) return;
 
   const desktopEntities = sysEntities.filter(
-    (entity) => entity.location === "desktop"
+    (entity) => entity.location === "Computer/Desktop"
   );
 
   const iconWxH = 96;
