@@ -86,6 +86,5 @@ export const arrangeDesktopIcons = (w = 0, h = 0) => {
     }
   });
 
-  console.log(icons);
   return icons;
 };
