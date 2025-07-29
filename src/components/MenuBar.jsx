@@ -1,4 +1,7 @@
-export function MenuBar({ menuItems, modifier }) {
+export function MenuBar({
+  menuItems = ["Open", "Share with", "Print", "E-mail", "Burn"],
+  modifier,
+}) {
   return (
     <section className={`menubar ${modifier}`}>
       <section className="menubar__dropdowns">
