@@ -4,7 +4,7 @@ import { getEntityById } from "../sysEntities";
 export function Icon({
   entityId,
   allowName = true,
-  focused,
+  focused = false,
   xClass,
   yClass,
   onClick,

@@ -7,7 +7,7 @@ export function DockIcon({ running, icon, onClick }) {
     <Icon
       xClass={`dock ${running ? "running" : ""}`}
       yClass="dock"
-      focused={focused.id === icon.shortcutFor}
+      focused={focused.id === icon.shortcutFor && running}
       entityId={icon.shortcutFor}
       allowName={false}
       onClick={() => onClick(icon)}

@@ -6,7 +6,6 @@ import { useFocus } from "../context/useFocus";
 import { useClick } from "../hooks/useClick";
 import { appOrFile } from "../service";
 import { useRunningApps } from "../context/useRunningApps";
-import { MenuBar } from "../components/MenuBar";
 
 const icons = {
   Computer: "/mypc-icon.svg",
@@ -59,8 +58,35 @@ function OriginItem({ onClick, src, name, active = false }) {
   );
 }
 
+function MenuBar({ menuItems, modifier }) {
+  return (
+    <section className={`menubar ${modifier}`}>
+      <section className="menubar__dropdowns">
+        {menuItems.map((menuItem, key) => {
+          return (
+            <span key={key} className="menubar__dropdown-item">
+              {menuItem}
+            </span>
+          );
+        })}
+      </section>
+      <section className="menubar__single-buttons">
+        <button type="button" className="menubar__single-button">
+          <img
+            alt=""
+            src="/help-button.svg"
+            aria-hidden={true}
+            className="menubar__single-button-image"
+          />
+        </button>
+      </section>
+    </section>
+  );
+}
+
 export function FileExplorer({ runningApp }) {
   const namespace = `file-explorer/${runningApp.id}`;
+<<<<<<< HEAD
   const { focused, setFocused } = useFocus();
   const [location, setLocation] = useState("Computer/Desktop/Folderr");
   const rootLocation = location.split("/").filter(Boolean)[0];
@@ -73,6 +99,12 @@ export function FileExplorer({ runningApp }) {
     "E-mail",
     "Burn",
   ]);
+
+  useEffect(() => {
+    if (!runningApp.data) return;
+
+    setLocation(`${runningApp.data.location}/${runningApp.data.name}`);
+  }, [runningApp.data]);
 
   function LocationInfo({ location }) {
     const [counter, setCounter] = useState(0);
@@ -135,18 +167,18 @@ export function FileExplorer({ runningApp }) {
     const entity = getEntityById(focused.id);
     if (entity) {
       setFocusedInfo({
-        icon: entity.iconSrc || entity.content,
+        icon: entity.content,
         info: <EntityInfo entity={entity} />,
       });
     } else {
       let counter = 0;
-      sysEntities.map((entity) => {
+      sysEntities.forEach((entity) => {
         if (entity.location === location) counter++;
       });
 
       setFocusedInfo({ items: counter });
     }
-  }, [focused]);
+  }, [focused, location, locationInfo, namespace, targetLocation]);
 
   return (
     <Window
@@ -258,7 +290,6 @@ export function FileExplorer({ runningApp }) {
           location={location}
           setLocation={setLocation}
           namespace={namespace}
-          isLibrary={location.includes("Libraries")}
         />
         <footer className="fe-footer">
           <div className="fe-footer__icon-wrapper">
@@ -276,12 +307,7 @@ export function FileExplorer({ runningApp }) {
   );
 }
 
-function FileExplorerLocation({
-  location,
-  setLocation,
-  namespace,
-  isLibrary = false,
-}) {
+function FileExplorerLocation({ location, setLocation, namespace }) {
   const [gridCellScale] = useState({ w: 96, h: 96 });
   const [entitiesHere, setEntitiesHere] = useState([]);
   const { focused, setFocused } = useFocus({
@@ -297,7 +323,7 @@ function FileExplorerLocation({
         setLocation(`${entity.location}/${entity.name}`);
         setFocused((prev) => ({ ...prev, id: null }));
         break;
-      case ("app", "picture", "plaintext"):
+      default:
         const { app, data } = appOrFile(entity.id);
         runApp(app, data);
         break;
@@ -315,13 +341,9 @@ function FileExplorerLocation({
   return (
     <div className="fe-location">
       <header className="fe-location__header">
-        {isLibrary ? (
-          <h2 className="fe-location__title">
-            {location.split("/").filter(Boolean).pop() + " library"}
-          </h2>
-        ) : (
-          <div></div>
-        )}
+        <h2 className="fe-location__title">
+          {location.split("/").filter(Boolean).pop()}
+        </h2>
         <div className="fe-location__arrange">
           <span className="fe-location__arrange-label">Arrange by:</span>
           <span className="fe-location__arrange-option">Folder</span>

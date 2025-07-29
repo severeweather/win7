@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+// import { useEffect } from "react";
+import { useRef, useState } from "react";
 import { useRunningApps } from "../context/useRunningApps";
 import { useDesktop } from "../pages/Desktop";
 import { useFocus } from "../context/useFocus";
@@ -188,10 +189,10 @@ export function Window({
     setPosition({ x: 8, y: 8 });
   }
 
-  useEffect(() => {
-    console.log(position);
-    console.log(scale);
-  }, [position, scale]);
+  // useEffect(() => {
+  //   console.log(position);
+  //   console.log(scale);
+  // }, [position, scale]);
 
   let sizepos = {
     top: position?.y,

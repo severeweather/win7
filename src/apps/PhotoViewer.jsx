@@ -1,8 +1,8 @@
 import { Window } from "../components/Window";
 import { MenuBar } from "../components/MenuBar";
-import { isEmpty } from "../service";
 import { useState } from "react";
 import { sysEntities } from "../sysEntities";
+import { isEmpty } from "../service";
 
 function ControlPanel({ counter, stopCount }) {
   function Button({ type = "", alt = "", src = "", onClick }) {
@@ -62,12 +62,22 @@ export function PhotoViewer({ runningApp }) {
     "E-mail",
     "Burn",
   ]);
-  const [pictures, setPictures] = useState(
-    sysEntities.filter((entity) => entity.type === "picture")
+  const [pictures] = useState(
+    isEmpty(runningApp.data)
+      ? sysEntities.filter((entity) => entity.type === "picture")
+      : sysEntities.filter(
+          (entity) =>
+            entity.type === "picture" &&
+            entity.location === runningApp.data.location
+        )
   );
-  const [pictureCounter, setPictureCounter] = useState(0);
-
-  const empty = isEmpty(runningApp.data);
+  const [pictureCounter, setPictureCounter] = useState(() => {
+    for (let i = 0; i < pictures.length; i++) {
+      if (pictures[i]["id"] === runningApp.data.id) {
+        return i;
+      }
+    }
+  });
 
   return (
     <Window
@@ -81,21 +91,12 @@ export function PhotoViewer({ runningApp }) {
       <div className="photo-viewer">
         <MenuBar menuItems={menuBarItems} />
         <section className="photo-viewer__content">
-          {empty ? (
-            <img
-              className="photo-viewer__displayed-image"
-              draggable={false}
-              src={pictures[pictureCounter].content}
-              alt={pictures[pictureCounter].name}
-            />
-          ) : (
-            <img
-              className="photo-viewer__displayed-image"
-              draggable={false}
-              src={runningApp.data.content}
-              alt={runningApp.data.name}
-            />
-          )}
+          <img
+            className="photo-viewer__displayed-image"
+            draggable={false}
+            src={pictures[pictureCounter].content}
+            alt={pictures[pictureCounter].name}
+          />
         </section>
       </div>
     </Window>

@@ -1,10 +1,10 @@
 import { sysEntities, getEntityById } from "./sysEntities";
 import { settings } from "./settings";
 
+export const isEmpty = (obj) => Object.keys(obj).length === 0;
+
 export const appOrFile = (id) => {
   const entity = getEntityById(id);
-
-  console.log(entity);
 
   if (entity.type === "app") {
     return { app: entity };
@@ -34,6 +34,7 @@ export const arrangeDesktopIcons = (w = 0, h = 0) => {
   const kheight = (iconWxH * qrows) / 100;
   const range_x = [];
   const range_y = [];
+
   for (let i = 0; i < qcols; i++) {
     range_x.push([i * iconWxH, (i + 1) * iconWxH]);
   }
@@ -43,6 +44,7 @@ export const arrangeDesktopIcons = (w = 0, h = 0) => {
   const icons = Array.from({ length: qcols * qrows }).map(() => {
     return {};
   });
+
   desktopEntities.forEach((icon) => {
     const calibrated_x = icon.posX * kwidth;
     const calibrated_y = icon.posY * kheight;
@@ -60,12 +62,30 @@ export const arrangeDesktopIcons = (w = 0, h = 0) => {
         break;
       }
     }
+
     if (target_row !== null && target_column !== null) {
       const index = target_row * qcols + target_column;
-      icons[index] = icon;
+
+      function findEmptyIndex(index) {
+        for (let offset = 0; offset < icons.length; offset++) {
+          const left = index - offset;
+          const right = index + offset;
+
+          if (left >= 0 && Object.keys(icons[left] || {}).length === 0)
+            return left;
+          if (
+            right < icons.length &&
+            Object.keys(icons[right] || {}).length === 0
+          )
+            return right;
+        }
+        return null;
+      }
+
+      icons[findEmptyIndex(index) || 0] = icon;
     }
   });
+
+  console.log(icons);
   return icons;
 };
-
-export const isEmpty = (obj) => Object.keys(obj).length === 0;
