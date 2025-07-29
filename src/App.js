@@ -6,6 +6,9 @@ import { RunningAppsProvider } from "./context/useRunningApps";
 import { useEffect, useRef, useState } from "react";
 
 function Boot({ onEnd, hide }) {
+  const [booted, setBooted] = useState(() => {
+    return localStorage.getItem("booted") === "true";
+  });
   const [startingWindows, setStartingWindows] = useState(true);
   const [welcome, setWelcome] = useState(false);
   const [wait, setWait] = useState(true);
@@ -71,7 +74,7 @@ function Boot({ onEnd, hide }) {
         <div className="welcome-windows__logo-wrapper">
           <img
             className="welcome-windows__logo"
-            src="/win-logo-home.svg"
+            src="/win7logo.svg"
             alt=""
             draggable={false}
           />
@@ -82,21 +85,34 @@ function Boot({ onEnd, hide }) {
 }
 
 function App() {
-  const [booted, setBooted] = useState(false);
+  const [booted, setBooted] = useState(() => {
+    return localStorage.getItem("booted") === "true";
+  });
+  const [bootEnded, setBootEnded] = useState(false);
 
   useEffect(() => {
-    if (!booted) return;
+    if (!bootEnded) return;
 
     const audio = new Audio("/windows-startup.mp3");
     audio.play().catch((e) => {
       console.warn("Autoplay blocked", e);
     });
-  }, [booted]);
+  }, [bootEnded]);
 
   return (
     <>
-      <Boot onEnd={() => setBooted(true)} hide={booted} />
-      <div className={`app-wrapper ${!booted && "inactive"}`}>
+      {!booted ? (
+        <Boot
+          onEnd={() => {
+            setBootEnded(true);
+            localStorage.setItem("booted", "true");
+          }}
+          hide={bootEnded}
+        />
+      ) : (
+        <></>
+      )}
+      <div className={`app-wrapper ${bootEnded || booted ? "" : "inactive"}`}>
         <FocusProvider>
           <RunningAppsProvider>
             <Router>
