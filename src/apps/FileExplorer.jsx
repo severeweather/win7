@@ -61,7 +61,7 @@ function OriginItem({ onClick, src, name, active = false }) {
 
 export function FileExplorer({ runningApp }) {
   const namespace = `file-explorer/${runningApp.id}`;
-  const { focused, setFocused } = useFocus();
+  const { focused } = useFocus();
   const [location, setLocation] = useState("Computer/Desktop");
   const rootLocation = location.split("/").filter(Boolean)[0];
   const targetLocation = location.split("/").filter(Boolean).pop();
@@ -73,6 +73,12 @@ export function FileExplorer({ runningApp }) {
     "E-mail",
     "Burn",
   ]);
+
+  useEffect(() => {
+    if (!runningApp.data) return;
+
+    setLocation(`${runningApp.data.location}/${runningApp.data.name}`);
+  }, [runningApp.data]);
 
   function LocationInfo({ location }) {
     const [counter, setCounter] = useState(0);
@@ -140,13 +146,13 @@ export function FileExplorer({ runningApp }) {
       });
     } else {
       let counter = 0;
-      sysEntities.map((entity) => {
+      sysEntities.forEach((entity) => {
         if (entity.location === location) counter++;
       });
 
       setFocusedInfo({ items: counter });
     }
-  }, [focused]);
+  }, [focused, location, locationInfo, namespace, targetLocation]);
 
   return (
     <Window
@@ -297,7 +303,7 @@ function FileExplorerLocation({
         setLocation(`${entity.location}/${entity.name}`);
         setFocused((prev) => ({ ...prev, id: null }));
         break;
-      case ("app", "picture", "plaintext"):
+      default:
         const { app, data } = appOrFile(entity.id);
         runApp(app, data);
         break;
