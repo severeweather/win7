@@ -4,7 +4,7 @@ import { getEntityById } from "../sysEntities";
 
 export function InternetExplorer({ runningApp }) {
   const [appData, setAppData] = useState({ app: {}, data: {} });
-  const [tabs, setTabs] = useState([
+  const [tabs] = useState([
     {
       id: "tab-1",
       name: "Google Chrome Fast & Secure Browser Built to Be Yours",
@@ -21,7 +21,7 @@ export function InternetExplorer({ runningApp }) {
   const [activeTab, setActiveTab] = useState("tab-1");
 
   useEffect(() => {
-    let app = getEntityById(runningApp.app);
+    let app = getEntityById(runningApp.app.id);
 
     if (app.type === "app")
       setAppData({
@@ -32,7 +32,7 @@ export function InternetExplorer({ runningApp }) {
         },
       });
     else return;
-  }, [runningApp, activeTab]);
+  }, [runningApp, activeTab, tabs]);
 
   return (
     <Window
@@ -81,7 +81,10 @@ export function InternetExplorer({ runningApp }) {
           </section>
         </header>
         <section className="ie-tab-content">
-          <iframe src={tabs.find((tab) => tab.id === activeTab).url} />
+          <iframe
+            title="active-tab"
+            src={tabs.find((tab) => tab.id === activeTab).url}
+          />
         </section>
       </div>
     </Window>
