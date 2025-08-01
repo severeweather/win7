@@ -5,6 +5,24 @@ import { FocusProvider } from "./context/useFocus";
 import { RunningAppsProvider } from "./context/useRunningApps";
 import { useEffect, useRef, useState } from "react";
 
+function preloadMedia(files) {
+  return Promise.all(
+    files.map((src) => {
+      return new Promise((resolve) => {
+        const ext = src.split(".").pop().toLowerCase();
+        if (["png", "jpg", "webp", "jpeg"].includes(ext)) {
+          const img = new Image();
+          img.onload = resolve;
+          img.onerror = resolve;
+          img.src = src;
+        } else {
+          resolve(); // unsupported, skip
+        }
+      });
+    })
+  );
+}
+
 function Boot({ onEnd, hide }) {
   const [booted, setBooted] = useState(() => {
     return localStorage.getItem("booted") === "true";
@@ -98,6 +116,15 @@ function App() {
       console.warn("Autoplay blocked", e);
     });
   }, [bootEnded]);
+
+  useEffect(() => {
+    preloadMedia([
+      "widows7wallpaper.jpg",
+      "iexplorer.png",
+      "fileexplorer.png",
+      "notepadicon.png",
+    ]);
+  }, []);
 
   return (
     <>
