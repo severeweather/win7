@@ -1,13 +1,24 @@
+import { useClippy } from "./Clippy";
+
 export function MenuBar({
   menuItems = ["Open", "Share with", "Print", "E-mail", "Burn"],
   modifier,
 }) {
+  const { clippy, callClippy } = useClippy();
   return (
     <section className={`menubar ${modifier}`}>
       <section className="menubar__dropdowns">
         {menuItems.map((menuItem, key) => {
           return (
-            <span key={key} className="menubar__dropdown-item">
+            <span
+              key={key}
+              className="menubar__dropdown-item"
+              onClick={() =>
+                callClippy(
+                  "This feature may be added in future versions, or it may not."
+                )
+              }
+            >
               {menuItem}
             </span>
           );
