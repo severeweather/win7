@@ -5,6 +5,55 @@ import { DockIcon } from "../components/DockIcon";
 import { useRunningApps } from "../context/useRunningApps";
 import { appOrFile } from "../service";
 
+function DateTime() {
+  const [now, setNow] = useState(new Date());
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setNow(new Date());
+    }, 1000);
+    return () => clearInterval(intervalId);
+  });
+
+  const pad = (n) => String(n).padStart(2, "0");
+  const hours = pad(now.getHours());
+  const minutes = pad(now.getMinutes());
+  const seconds = pad(now.getSeconds());
+
+  const days = pad(now.getDate());
+  const months = pad(now.getMonth() + 1);
+  const years = now.getFullYear();
+
+  return (
+    <div className="datetime">
+      <div className="datetime__time">{`${hours}:${minutes}:${seconds}`}</div>
+      <div className="datetime__date">{`${days}/${months}/${years}`}</div>
+    </div>
+  );
+}
+
+function NotificationArea() {
+  function NotificationIcon({ src }) {
+    return (
+      <div className="notification-area__icon-wrapper">
+        <img className="notification-area__icon" src={src} alt="" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="notification-area">
+      <NotificationIcon src="/notificationarea-report.svg" />
+      <NotificationIcon src="/notificationarea-volume.svg" />
+      <NotificationIcon src="/notificationarea-internet.svg" />
+    </div>
+  );
+}
+
+function MinimizeAll() {
+  return <div className="minimize-all"></div>;
+}
+
 export function Dock() {
   const { runningApps, runApp } = useRunningApps();
   const [dockIcons, setDockIcons] = useState();
@@ -16,7 +65,7 @@ export function Dock() {
 
   useEffect(() => {
     setDockIcons(userPreferences.dockIcons);
-  }, [userPreferences.dockIcons]);
+  }, []);
 
   return (
     <footer id="dock">
@@ -39,6 +88,9 @@ export function Dock() {
           );
         })}
       </section>
+      <NotificationArea />
+      <DateTime />
+      <MinimizeAll />
     </footer>
   );
 }

@@ -73,7 +73,7 @@
 
   .icon.dock {
     border-radius: none;
-    background-color: none; 
+    background-color: none;
     box-shadow: none;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
@@ -91,8 +91,9 @@
   }
 
   &.running {
-    border-radius: 6px;
-    border: 1px solid rgba(82, 82, 82, 0.349);
+    border-radius: 3px;
+    box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.3);
+
     overflow: hidden;
     background: linear-gradient(
       to bottom,
@@ -106,10 +107,10 @@
   height: 100%;
   background: linear-gradient(
     to bottom,
-    rgba(255, 255, 255, 0.5),
-    rgba(181, 181, 181, 0.5)
+    rgba(255, 255, 255, 0.1),
+    rgba(181, 181, 181, 0.1)
   );
-  border-radius: 6px;
+  border-radius: 3px;
   overflow: hidden;
 
   .icon {
