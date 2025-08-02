@@ -4,6 +4,7 @@ import { getEntityById } from "../sysEntities";
 import NavArrows from "../components/NavArrows";
 
 export function InternetExplorer({ runningApp }) {
+  const [refresher, setRefresher] = useState(0);
   const [appData, setAppData] = useState({ app: {}, data: {} });
   const [tabs] = useState([
     {
@@ -45,12 +46,15 @@ export function InternetExplorer({ runningApp }) {
           </section>
           <section className="ie-searchbar">
             <input
-              type="search"
+              type="text"
               value={tabs.find((tab) => tab.id === activeTab).url}
               placeholder="Search"
             />
-            <button type="button" className="ie-refresh" />
-            <button type="button" className="ie-stop-loading" />
+            <button
+              type="button"
+              className="ie-refresh"
+              onClick={() => setRefresher((prev) => prev + 1)}
+            />
           </section>
           <section className="ie-search-engines">
             <img src="/iconbing.png" alt="bing" />
@@ -80,7 +84,7 @@ export function InternetExplorer({ runningApp }) {
             })}
           </section>
         </header>
-        <section className="ie-tab-content">
+        <section className="ie-tab-content" key={refresher}>
           <iframe
             title="active-tab"
             src={tabs.find((tab) => tab.id === activeTab).url}
