@@ -4,7 +4,7 @@ export function MenuBar({
   menuItems = ["Open", "Share with", "Print", "E-mail", "Burn"],
   modifier,
 }) {
-  const { clippy, callClippy } = useClippy();
+  const { callClippy } = useClippy();
   return (
     <section className={`menubar ${modifier}`}>
       <section className="menubar__dropdowns">
@@ -13,11 +13,7 @@ export function MenuBar({
             <span
               key={key}
               className="menubar__dropdown-item"
-              onClick={() =>
-                callClippy(
-                  "This feature may be added in future versions, or it may not."
-                )
-              }
+              onClick={() => callClippy("WIP")}
             >
               {menuItem}
             </span>
@@ -31,6 +27,11 @@ export function MenuBar({
             src="/help-button.svg"
             aria-hidden={true}
             className="menubar__single-button-image"
+            onClick={() =>
+              callClippy(
+                "This feature may be added in future versions, or it may not."
+              )
+            }
           />
         </button>
       </section>

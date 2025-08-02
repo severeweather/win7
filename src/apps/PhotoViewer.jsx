@@ -3,8 +3,11 @@ import { MenuBar } from "../components/MenuBar";
 import { useState } from "react";
 import { sysEntities } from "../sysEntities";
 import { isEmpty } from "../service";
+import { useClippy } from "../components/Clippy";
 
 function ControlPanel({ counter, stopCount }) {
+  const { callClippy } = useClippy();
+
   function Button({ type = "", alt = "", src = "", onClick }) {
     return (
       <div
@@ -26,8 +29,8 @@ function ControlPanel({ counter, stopCount }) {
   return (
     <section className="pv-control-panel">
       <section className="pv-control-panel__wing">
-        <Button src="wpv-zoom.png" />
-        <Button src="wpv-revert.png" />
+        <Button src="wpv-zoom.png" onClick={() => callClippy("WIP")} />
+        <Button src="wpv-revert.png" onClick={() => callClippy("WIP")} />
       </section>
       <section className="pv-control-panel__head">
         <Button
@@ -35,7 +38,11 @@ function ControlPanel({ counter, stopCount }) {
           src="wpv-prev.png"
           onClick={() => counter((prev) => (prev > 0 ? prev - 1 : prev))}
         />
-        <Button type="slideshow" src="wpv-slideshow.png" />
+        <Button
+          type="slideshow"
+          src="wpv-slideshow.png"
+          onClick={() => callClippy("WIP")}
+        />
         <Button
           type="arrow"
           src="wpv-next.png"
@@ -45,9 +52,9 @@ function ControlPanel({ counter, stopCount }) {
         />
       </section>
       <section className="pv-control-panel__wing">
-        <Button src="wpv-ccw.png" />
-        <Button src="wpv-cw.png" />
-        <Button src="wpv-trash.png" />
+        <Button src="wpv-ccw.png" onClick={() => callClippy("WIP")} />
+        <Button src="wpv-cw.png" onClick={() => callClippy("WIP")} />
+        <Button src="wpv-trash.png" onClick={() => callClippy("WIP")} />
       </section>
     </section>
   );
