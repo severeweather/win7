@@ -6,6 +6,8 @@ import { useFocus } from "../context/useFocus";
 import { useClick } from "../hooks/useClick";
 import { appOrFile } from "../service";
 import { useRunningApps } from "../context/useRunningApps";
+import { MenuBar } from "../components/MenuBar";
+import NavArrows from "../components/NavArrows";
 
 const icons = {
   Computer: "/mypc-icon.svg",
@@ -58,29 +60,25 @@ function OriginItem({ onClick, src, name, active = false }) {
   );
 }
 
-function MenuBar({ menuItems, modifier }) {
+function NavPath({ icons, rootLocation, location }) {
   return (
-    <section className={`menubar ${modifier}`}>
-      <section className="menubar__dropdowns">
-        {menuItems.map((menuItem, key) => {
-          return (
-            <span key={key} className="menubar__dropdown-item">
-              {menuItem}
-            </span>
-          );
-        })}
-      </section>
-      <section className="menubar__single-buttons">
-        <button type="button" className="menubar__single-button">
-          <img
-            alt=""
-            src="/help-button.svg"
-            aria-hidden={true}
-            className="menubar__single-button-image"
-          />
-        </button>
-      </section>
-    </section>
+    <div className="fe-navigation__path">
+      <div className="fe-navigation__path-icon-wrapper">
+        <img
+          alt=""
+          className="fe-navigation__path-icon fe-navigation__path-item"
+          src={icons[rootLocation]}
+          aria-hidden={true}
+        />
+      </div>
+      {Array.from(location.split("/").filter(Boolean)).map((location, key) => {
+        return (
+          <span key={key} className="fe-navigation__path-item">
+            {location}
+          </span>
+        );
+      })}
+    </div>
   );
 }
 
@@ -186,43 +184,12 @@ export function FileExplorer({ runningApp }) {
       appData={runningApp}
       header={
         <nav className="fe-navigation">
-          <section className="fe-navigation__arrows">
-            <div className="fe-navigation__arrow-wrapper">
-              <img
-                alt=""
-                src="/arrow-back-icon.svg"
-                className="fe-navigation__arrow"
-                aria-hidden={true}
-              />
-            </div>
-            <div className="fe-navigation__arrow-wrapper">
-              <img
-                alt=""
-                src="/arrow-forward-icon.svg"
-                className="fe-navigation__arrow"
-                aria-hidden={true}
-              />
-            </div>
-          </section>
-          <section className="fe-navigation__path">
-            <div className="fe-navigation__path-icon-wrapper">
-              <img
-                alt=""
-                className="fe-navigation__path-icon fe-navigation__path-item"
-                src={icons[rootLocation]}
-                aria-hidden={true}
-              />
-            </div>
-            {Array.from(location.split("/").filter(Boolean)).map(
-              (location, key) => {
-                return (
-                  <span key={key} className="fe-navigation__path-item">
-                    {location}
-                  </span>
-                );
-              }
-            )}
-          </section>
+          <NavArrows />
+          <NavPath
+            icons={icons}
+            rootLocation={rootLocation}
+            location={location}
+          />
           <input
             className="fe-navigation__search"
             type="search"
@@ -255,6 +222,7 @@ export function FileExplorer({ runningApp }) {
               active={location === "Computer/Recent Places"}
             />
           </Origin>
+
           {/* LIBRARIES */}
           <Origin name="Libraries" src="/library-icon.svg">
             <OriginItem
@@ -276,6 +244,7 @@ export function FileExplorer({ runningApp }) {
               active={location === "Libraries/Pictures"}
             />
           </Origin>
+
           {/* COMPUTER */}
           <Origin name="Computer" src="/mypc-icon.svg">
             <OriginItem

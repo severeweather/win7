@@ -1,0 +1,17 @@
+.nav-arrows {
+  height: 100%;
+  display: flex;
+  width: fit-content;
+
+  .nav-arrow {
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    .nav-arrow__image {
+      height: 100%;
+      width: 100%;
+      object-fit: contain;
+      user-select: none;
+      cursor: pointer;
+    }
+  }
+}
