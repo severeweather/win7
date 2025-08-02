@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { useRunningApps } from "../context/useRunningApps";
 import { useDesktop } from "../pages/Desktop";
 import { useFocus } from "../context/useFocus";
+import { useClippy } from "./Clippy";
 
 export function Window({
   allowTitle = true,
@@ -14,6 +15,7 @@ export function Window({
   minH,
 }) {
   const namespace = "openWindows";
+  const { callClippy } = useClippy();
   const { desktopWidth, desktopHeight } = useDesktop();
   const { setRunningApps } = useRunningApps();
   const { focused, setFocused } = useFocus({
@@ -21,7 +23,8 @@ export function Window({
     id: appData.app.id,
   });
   const windowRef = useRef(null);
-  const [minimized, setMinimized] = useState(false);
+  // const [minimized, setMinimized] = useState(false);
+  const [minimized] = useState(false);
   const [scale, setScale] = useState({ w: 900, h: 700 });
   const [minScale] = useState({ w: minW || 800, h: minH || 500 });
   const [position, setPosition] = useState({
@@ -242,7 +245,8 @@ export function Window({
           <button
             type="button"
             className="minimize"
-            onClick={() => setMinimized(true)}
+            // onClick={() => setMinimized(true)}
+            onClick={() => callClippy("Just close the window.")}
           >
             <img src="/minimize.svg" alt="minimize" />
           </button>
