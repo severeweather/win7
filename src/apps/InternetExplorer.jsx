@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Window } from "../components/Window";
 import { getEntityById } from "../sysEntities";
+import NavArrows from "../components/NavArrows";
 
 export function InternetExplorer({ runningApp }) {
   const [appData, setAppData] = useState({ app: {}, data: {} });
@@ -40,8 +41,7 @@ export function InternetExplorer({ runningApp }) {
       header={
         <nav className="ie-nav">
           <section className="ie-arrows">
-            <button className="ie-arrow-back"></button>
-            <button className="ie-arrow-forward"></button>
+            <NavArrows />
           </section>
           <section className="ie-searchbar">
             <input

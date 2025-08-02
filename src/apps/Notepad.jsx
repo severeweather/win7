@@ -1,6 +1,5 @@
 import { Window } from "../components/Window";
 import { MenuBar } from "../components/MenuBar";
-import { isEmpty } from "../service";
 import { useState } from "react";
 
 export function Notepad({ runningApp }) {

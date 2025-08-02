@@ -7,6 +7,7 @@ import { useClick } from "../hooks/useClick";
 import { appOrFile } from "../service";
 import { useRunningApps } from "../context/useRunningApps";
 import { MenuBar } from "../components/MenuBar";
+import NavArrows from "../components/NavArrows";
 
 const icons = {
   Computer: "/mypc-icon.svg",
@@ -56,6 +57,28 @@ function OriginItem({ onClick, src, name, active = false }) {
       </div>
       <span className="fe-origin__list-item-title">{name}</span>
     </li>
+  );
+}
+
+function NavPath({ icons, rootLocation, location }) {
+  return (
+    <div className="fe-navigation__path">
+      <div className="fe-navigation__path-icon-wrapper">
+        <img
+          alt=""
+          className="fe-navigation__path-icon fe-navigation__path-item"
+          src={icons[rootLocation]}
+          aria-hidden={true}
+        />
+      </div>
+      {Array.from(location.split("/").filter(Boolean)).map((location, key) => {
+        return (
+          <span key={key} className="fe-navigation__path-item">
+            {location}
+          </span>
+        );
+      })}
+    </div>
   );
 }
 
@@ -160,43 +183,12 @@ export function FileExplorer({ runningApp }) {
       appData={runningApp}
       header={
         <nav className="fe-navigation">
-          <section className="fe-navigation__arrows">
-            <div className="fe-navigation__arrow-wrapper">
-              <img
-                alt=""
-                src="/arrow-back-icon.svg"
-                className="fe-navigation__arrow"
-                aria-hidden={true}
-              />
-            </div>
-            <div className="fe-navigation__arrow-wrapper">
-              <img
-                alt=""
-                src="/arrow-forward-icon.svg"
-                className="fe-navigation__arrow"
-                aria-hidden={true}
-              />
-            </div>
-          </section>
-          <section className="fe-navigation__path">
-            <div className="fe-navigation__path-icon-wrapper">
-              <img
-                alt=""
-                className="fe-navigation__path-icon fe-navigation__path-item"
-                src={icons[rootLocation]}
-                aria-hidden={true}
-              />
-            </div>
-            {Array.from(location.split("/").filter(Boolean)).map(
-              (location, key) => {
-                return (
-                  <span key={key} className="fe-navigation__path-item">
-                    {location}
-                  </span>
-                );
-              }
-            )}
-          </section>
+          <NavArrows />
+          <NavPath
+            icons={icons}
+            rootLocation={rootLocation}
+            location={location}
+          />
           <input
             className="fe-navigation__search"
             type="search"
@@ -229,6 +221,7 @@ export function FileExplorer({ runningApp }) {
               active={location === "Computer/Recent Places"}
             />
           </Origin>
+
           {/* LIBRARIES */}
           <Origin name="Libraries" src="/library-icon.svg">
             <OriginItem
@@ -250,6 +243,7 @@ export function FileExplorer({ runningApp }) {
               active={location === "Libraries/Pictures"}
             />
           </Origin>
+
           {/* COMPUTER */}
           <Origin name="Computer" src="/mypc-icon.svg">
             <OriginItem
