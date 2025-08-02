@@ -4,6 +4,7 @@ import { Desktop } from "./pages/Desktop";
 import { FocusProvider } from "./context/useFocus";
 import { RunningAppsProvider } from "./context/useRunningApps";
 import { useEffect, useRef, useState } from "react";
+import { Clippy, ClippyContextProvider } from "./components/Clippy";
 
 function preloadMedia(files) {
   return Promise.all(
@@ -142,11 +143,14 @@ function App() {
       <div className={`app-wrapper ${bootEnded || booted ? "" : "inactive"}`}>
         <FocusProvider>
           <RunningAppsProvider>
-            <Router>
-              <Routes>
-                <Route path="/" element={<Desktop />} />
-              </Routes>
-            </Router>
+            <ClippyContextProvider>
+              <Router>
+                <Routes>
+                  <Route path="/" element={<Desktop />} />
+                </Routes>
+              </Router>
+              <Clippy />
+            </ClippyContextProvider>
           </RunningAppsProvider>
         </FocusProvider>
       </div>
