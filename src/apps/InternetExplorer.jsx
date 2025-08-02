@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { Window } from "../components/Window";
 import { getEntityById } from "../sysEntities";
 import NavArrows from "../components/NavArrows";
+import { useClippy } from "../components/Clippy";
 
 export function InternetExplorer({ runningApp }) {
+  const { callClippy } = useClippy();
   const [refresher, setRefresher] = useState(0);
   const [appData, setAppData] = useState({ app: {}, data: {} });
   const [tabs] = useState([
@@ -56,7 +58,10 @@ export function InternetExplorer({ runningApp }) {
               onClick={() => setRefresher((prev) => prev + 1)}
             />
           </section>
-          <section className="ie-search-engines">
+          <section
+            className="ie-search-engines"
+            onClick={() => callClippy("We only use Bing here.")}
+          >
             <img src="/iconbing.png" alt="bing" />
             <span>Bing</span>
           </section>

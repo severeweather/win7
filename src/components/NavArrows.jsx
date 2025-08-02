@@ -1,4 +1,7 @@
+import { useClippy } from "./Clippy";
+
 export default function NavArrows() {
+  const { callClippy } = useClippy();
   function NavArrow({ src, onClick }) {
     return (
       <div className="nav-arrow" onClick={onClick}>
@@ -10,9 +13,9 @@ export default function NavArrows() {
   return (
     <div className="nav-arrows">
       {/* prettier-ignore */}
-      <NavArrow src="/arrow-back-icon.svg" onClick={() => {}} />
+      <NavArrow src="/arrow-back-icon.svg" onClick={() => callClippy("WIP")} />
       {/* prettier-ignore */}
-      <NavArrow src="/arrow-forward-icon.svg" onClick={() => {}} />
+      <NavArrow src="/arrow-forward-icon.svg" onClick={() => callClippy("WIP")} />
     </div>
   );
 }
