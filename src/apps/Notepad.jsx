@@ -1,19 +1,22 @@
-import { Window } from "../components/Window";
+import { Window } from "../components/window/Window";
 import { MenuBar } from "../components/MenuBar";
 import { useState } from "react";
 
 export function Notepad({ runningApp }) {
   const [text, setText] = useState("");
+
   return (
-    <Window appData={runningApp}>
+    <Window
+      data={{ id: runningApp.app.id, icon: runningApp.app.iconSrc }}
+      title={`${runningApp.data?.name || "Untitled"} — Notepad`}
+    >
       <div className="notepad">
         <MenuBar />
-        <section className="notepad content">
-          <textarea
-            value={runningApp.data?.content ?? text}
-            onChange={(e) => setText(e.target.value)}
-          />
-        </section>
+        <textarea
+          className="notepad__content"
+          value={runningApp.data?.content || text}
+          onChange={(e) => setText(e.target.value)}
+        />
       </div>
     </Window>
   );

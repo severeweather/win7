@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Window } from "../components/Window";
+import { Window } from "../components/window/Window";
 import { getEntityById } from "../sysEntities";
 import NavArrows from "../components/NavArrows";
 import { useClippy } from "../components/Clippy";

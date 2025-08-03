@@ -1,4 +1,4 @@
-import { Window } from "../components/Window";
+import { Window } from "../components/window/Window";
 import { useEffect, useMemo, useState } from "react";
 import { getEntityById, sysEntities } from "../sysEntities";
 import { Icon } from "../components/Icon";

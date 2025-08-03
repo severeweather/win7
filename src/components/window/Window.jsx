@@ -1,43 +1,51 @@
-// import { useEffect } from "react";
 import { useRef, useState } from "react";
-import { useRunningApps } from "../context/useRunningApps";
-import { useDesktop } from "../pages/Desktop";
-import { useFocus } from "../context/useFocus";
-import { useClippy } from "./Clippy";
+import { useDesktop } from "../../pages/Desktop";
+import { useFocus } from "../../context/useFocus";
+import { useRunningApps } from "../../context/useRunningApps";
+import { WindowControls } from "./WindowControls";
+import { ResizeHandles } from "./ResizeHandles";
+import { useClippy } from "../Clippy";
 
 export function Window({
-  allowTitle = true,
   children,
-  footer,
   header,
-  appData,
-  minW,
-  minH,
+  footer,
+  data,
+  title,
+  minW = 0,
+  minH = 0,
 }) {
   const namespace = "openWindows";
-  const { callClippy } = useClippy();
-  const { desktopWidth, desktopHeight } = useDesktop();
-  const { setRunningApps } = useRunningApps();
-  const { focused, setFocused } = useFocus({
-    namespace: namespace,
-    id: appData.app.id,
-  });
   const windowRef = useRef(null);
-  // const [minimized, setMinimized] = useState(false);
-  const [minimized] = useState(false);
+  const { callClippy } = useClippy();
+  const { setRunningApps } = useRunningApps();
+  const { desktopWidth, desktopHeight } = useDesktop();
+  const { focused, setFocused } = useFocus({ namespace: namespace, id: data.id }); // prettier-ignore
   const [scale, setScale] = useState({ w: 900, h: 700 });
-  const [minScale] = useState({ w: minW || 800, h: minH || 500 });
-  const [position, setPosition] = useState({
-    x: 200,
-    y: 200,
-  });
+  const [position, setPosition] = useState({ x: 200, y: 200 }); // prettier-ignore
+  const [minScale] = useState({ w: minW, h: minH });
+  let dimensions = {
+    top: position?.y,
+    left: position?.x,
+    width: scale?.w,
+    height: scale?.h,
+    minWidth: minScale?.w,
+    minHeight: minScale?.h,
+  };
 
-  function terminateWindow() {
-    setRunningApps((prev) =>
-      prev.filter((runningApp) => runningApp.app.id !== appData?.app.id)
-    );
-    setFocused({ namespace: "desktop", id: null });
-  }
+  //
+  // function terminateWindow() {
+  //   setRunningApps((prev) =>
+  //     prev.filter((runningApp) => runningApp.app.id !== appData?.app.id)
+  //   );
+  //   setFocused({ namespace: "desktop", id: null });
+  // }
+  //
+  // function handleMaximize() {
+  //   setScale({ w: desktopWidth - 16, h: desktopHeight - 67 });
+  //   setPosition({ x: 8, y: 8 });
+  // }
+  //
 
   function handleDrag(e) {
     const initX = e.clientX;
@@ -187,116 +195,36 @@ export function Window({
     document.addEventListener("mouseup", mouseUp);
   }
 
-  function handleMaximize() {
-    setScale({ w: desktopWidth - 16, h: desktopHeight - 67 });
-    setPosition({ x: 8, y: 8 });
-  }
-
-  // useEffect(() => {
-  //   console.log(position);
-  //   console.log(scale);
-  // }, [position, scale]);
-
-  let sizepos = {
-    top: position?.y,
-    left: position?.x,
-    width: scale?.w,
-    height: scale?.h,
-    minWidth: minScale?.w,
-    minHeight: minScale?.h,
-  };
-
-  const windowTitle = `${
-    appData.data
-      ? appData.data.name
-        ? `${appData.data.name} - ${appData.app.name}`
-        : `Untitled - ${appData.app.name}`
-      : appData.app.name
-  }`;
-
   return (
     <div
       ref={windowRef}
-      className={`window ${minimized ? "minimized" : ""} ${
-        focused.namespace === namespace && focused.id === appData.app.id
-          ? "focused"
-          : ""
-      }`}
-      style={sizepos}
-      onClick={() => setFocused({ namespace: namespace, id: appData.app.id })}
+      style={dimensions}
+      // onClick={() => setFocused({ namespace: namespace, id: appData.app.id })}
+      // className={`window ${ focused.namespace === namespace && focused.id === appData.app.id ? "focused" : "" }`} /* prettier-ignore */
+      className={`window idle`}
     >
       <nav
-        className="window-nav drag-zone"
+        className="window__navigation"
         onMouseDown={(e) => handleDrag(e)}
-        onDoubleClick={handleMaximize}
+        // onDoubleClick={handleMaximize}
       >
-        {allowTitle ? (
-          <span className="window-title">
-            <img
-              src={appData.app.iconSrc}
-              alt={`${appData.data?.name} title icon`}
-            />
-            {windowTitle}
-          </span>
-        ) : (
-          <></>
-        )}
-        <section className="min-max-close">
-          <button
-            type="button"
-            className="minimize"
-            // onClick={() => setMinimized(true)}
-            onClick={() => callClippy("Just close the window.")}
-          >
-            <img src="/minimize.svg" alt="minimize" />
-          </button>
-          <button type="button" className="maximize" onClick={handleMaximize}>
-            <img src="/maximize.svg" alt="maximize" />
-          </button>
-          <button type="button" className="close" onClick={terminateWindow}>
-            <img src="/close.svg" alt="close" />
-          </button>
-        </section>
+        <div className="window__icon-and-title">
+          <div className="window__icon-wrapper">
+            {data.icon && (
+              <img src={data.icon} className="window__icon" alt="" />
+            )}
+          </div>
+          <span className="window__title">{title}</span>
+        </div>
+
+        <WindowControls />
       </nav>
 
-      <>{header}</>
-      <section className="window-content">{children}</section>
-      <>{footer}</>
+      <header className="window__header">{header}</header>
+      <section className="window__content">{children}</section>
+      <footer className="window__footer">{footer}</footer>
 
-      <div /* resize window */>
-        <div
-          className="resizer top"
-          onMouseDown={(e) => handleResize(e, "top")}
-        ></div>
-        <div
-          className="resizer right"
-          onMouseDown={(e) => handleResize(e, "right")}
-        ></div>
-        <div
-          className="resizer bottom"
-          onMouseDown={(e) => handleResize(e, "bottom")}
-        ></div>
-        <div
-          className="resizer left"
-          onMouseDown={(e) => handleResize(e, "left")}
-        ></div>
-        <div
-          className="resizer topright"
-          onMouseDown={(e) => handleResize(e, "topright")}
-        ></div>
-        <div
-          className="resizer bottomright"
-          onMouseDown={(e) => handleResize(e, "bottomright")}
-        ></div>
-        <div
-          className="resizer bottomleft"
-          onMouseDown={(e) => handleResize(e, "bottomleft")}
-        ></div>
-        <div
-          className="resizer topleft"
-          onMouseDown={(e) => handleResize(e, "topleft")}
-        ></div>
-      </div>
+      <ResizeHandles handler={handleResize} component={windowRef.current} />
     </div>
   );
 }

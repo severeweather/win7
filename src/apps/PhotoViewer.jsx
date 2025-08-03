@@ -1,4 +1,4 @@
-import { Window } from "../components/Window";
+import { Window } from "../components/window/Window";
 import { MenuBar } from "../components/MenuBar";
 import { useState } from "react";
 import { sysEntities } from "../sysEntities";
@@ -61,14 +61,6 @@ function ControlPanel({ counter, stopCount }) {
 }
 
 export function PhotoViewer({ runningApp }) {
-  const [menuBarItems] = useState([
-    "File",
-    "Open",
-    "Share with",
-    "Print",
-    "E-mail",
-    "Burn",
-  ]);
   const [pictures] = useState(
     isEmpty(runningApp.data)
       ? sysEntities.filter((entity) => entity.type === "picture")
@@ -88,7 +80,8 @@ export function PhotoViewer({ runningApp }) {
 
   return (
     <Window
-      appData={{ app: runningApp.app, data: pictures[pictureCounter] }}
+      data={{ id: runningApp.app.id, icon: runningApp.app.iconSrc }}
+      title={`${pictures[pictureCounter].name} — Windows Photo Viewer`}
       footer={
         <ControlPanel counter={setPictureCounter} stopCount={pictures.length} />
       }
@@ -96,7 +89,7 @@ export function PhotoViewer({ runningApp }) {
       minH={350}
     >
       <div className="photo-viewer">
-        <MenuBar menuItems={menuBarItems} />
+        <MenuBar />
         <section className="photo-viewer__content">
           <img
             className="photo-viewer__displayed-image"
