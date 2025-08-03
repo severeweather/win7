@@ -4,96 +4,67 @@
   position: relative;
 }
 
-.ie-nav {
+.ie-navigation {
   width: 100%;
   height: 24px;
   display: flex;
   gap: 8px;
-
   margin-bottom: 8px;
 }
 
-.ie-arrows {
-  width: fit-content;
+.ie-navigation__searchbar {
   display: flex;
-
-  .ie-arrow-back,
-  .ie-arrow-forward {
-    height: 100%;
-    aspect-ratio: 1 / 1;
-    background: none;
-    border: none;
-  }
-
-  .ie-arrow-back {
-    scale: 0.85;
-    background: url("/assets/ie-back.png");
-    background-repeat: no-repeat;
-    background-size: contain;
-  }
-  .ie-arrow-forward {
-    scale: 0.85;
-    background: url("/assets/ie-forward.png");
-    background-repeat: no-repeat;
-    background-size: contain;
-  }
-}
-
-.ie-searchbar {
-  flex: 1;
-  display: flex;
-  input {
-    padding: 0 8px;
-    flex: 1;
-    border-radius: 3px 0 0 3px;
-    border: 1px solid black;
-    color: gray;
-    font-style: italic;
-  }
-
-  .ie-refresh,
-  .ie-stop-loading {
-    border: 1px solid black;
-    height: 100%;
-    aspect-ratio: 1 / 1;
-  }
-
-  .ie-refresh {
-    background: url("/assets/ie-refresh.svg");
-    background-color: white;
-    background-repeat: no-repeat;
-    background-size: 60%;
-    background-position: center center;
-    border-left: none;
-    border-right: none;
-  }
-
-  .ie-stop-loading {
-    background: url("/assets/ie-stop-loading.svg");
-    background-color: white;
-    background-repeat: no-repeat;
-    background-size: 50%;
-    background-position: center center;
-  }
-}
-
-.ie-search-engines {
-  width: 30%;
-  background: white;
+  width: 100%;
+  border-radius: 2px;
   border: 1px solid black;
+  overflow: hidden;
+
+  .ie-navigation__searchbar__input {
+    flex: 1;
+    padding: 0 8px;
+    font-style: italic;
+    background-color: white;
+    color: rgb(139, 139, 139);
+  }
+
+  .ie-navigation__searchbar__button-wrapper {
+    height: 100%;
+    cursor: pointer;
+    border-left: 1px solid black;
+    background-color: white;
+    padding: 2px;
+
+    .ie-navigation__searchbar__button {
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+}
+
+.ie-navigation__search-engines {
+  width: 30%;
   display: flex;
   align-items: center;
-  padding: 0 8px;
-  gap: 6px;
+  padding: 0 4px;
+  gap: 4px;
   cursor: pointer;
-  img {
-    height: 12px;
-    width: auto;
+  background-color: white;
+  border-radius: 2px;
+  border: 1px solid black;
+  overflow: hidden;
+
+  .ie-navigation__search-engines__icon-wrapper {
+    height: 100%;
+    padding: 4px;
+
+    .ie-navigation__search-engines__icon {
+      height: 100%;
+      object-fit: contain;
+    }
   }
-  span {
-    color: gray;
+
+  .ie-navigation__search-engines__engine-name {
     font-style: italic;
-    font-size: 0.8rem;
   }
 }
 

@@ -1,13 +1,21 @@
-import { useEffect, useState } from "react";
+  import { act, useEffect, useState } from "react";
 import { Window } from "../components/window/Window";
 import { getEntityById } from "../sysEntities";
 import NavArrows from "../components/NavArrows";
 import { useClippy } from "../components/Clippy";
 
+function IETab({ tabData, active, onClick }) {
+  return (
+    <div className={`ie-tab ${active ? "active" : ""}`} onClick={onClick}>
+      <img src={tabData.tabicon} alt={tabData.name} />
+      <span>{tabData.name}</span>
+    </div>
+  );
+}
+
 export function InternetExplorer({ runningApp }) {
   const { callClippy } = useClippy();
   const [refresher, setRefresher] = useState(0);
-  const [appData, setAppData] = useState({ app: {}, data: {} });
   const [tabs] = useState([
     {
       id: "tab-1",
@@ -24,46 +32,45 @@ export function InternetExplorer({ runningApp }) {
   ]);
   const [activeTab, setActiveTab] = useState("tab-1");
 
-  useEffect(() => {
-    let app = getEntityById(runningApp.app.id);
-
-    if (app.type === "app")
-      setAppData({
-        app: app,
-        data: {
-          name: tabs.find((tab) => tab.id === activeTab).name,
-          icon: tabs.find((tab) => tab.id === activeTab).tabicon,
-        },
-      });
-    else return;
-  }, [runningApp, activeTab, tabs]);
-
   return (
     <Window
-      appData={appData}
+      data={{ id: runningApp.app.id, icon: runningApp.app.iconSrc }}
+      title={`${ tabs.find((tab) => tab.id === activeTab).name } — Internet Explorer`} // prettier-ignore
       header={
-        <nav className="ie-nav">
-          <section className="ie-arrows">
-            <NavArrows />
-          </section>
-          <section className="ie-searchbar">
+        <nav className="ie-navigation">
+          <NavArrows />
+          <section className="ie-navigation__searchbar">
             <input
               type="text"
-              value={tabs.find((tab) => tab.id === activeTab).url}
               placeholder="Search"
+              className="ie-navigation__searchbar__input"
+              value={tabs.find((tab) => tab.id === activeTab).url}
             />
-            <button
-              type="button"
-              className="ie-refresh"
+            <div
+              className="ie-navigation__searchbar__button-wrapper"
               onClick={() => setRefresher((prev) => prev + 1)}
-            />
+            >
+              <img
+                className="ie-navigation__searchbar__button"
+                src="/ie-refresh.svg"
+                alt=""
+              />
+            </div>
           </section>
           <section
-            className="ie-search-engines"
+            className="ie-navigation__search-engines"
             onClick={() => callClippy("We only use Bing here.")}
           >
-            <img src="/iconbing.png" alt="bing" />
-            <span>Bing</span>
+            <div className="ie-navigation__search-engines__icon-wrapper">
+              <img
+                className="ie-navigation__search-engines__icon"
+                src="/iconbing.png"
+                alt=""
+              />
+            </div>
+            <span className="ie-navigation__search-engines__engine-name">
+              Bing
+            </span>
           </section>
         </nav>
       }
@@ -97,14 +104,5 @@ export function InternetExplorer({ runningApp }) {
         </section>
       </div>
     </Window>
-  );
-}
-
-function IETab({ tabData, active, onClick }) {
-  return (
-    <div className={`ie-tab ${active ? "active" : ""}`} onClick={onClick}>
-      <img src={tabData.tabicon} alt={tabData.name} />
-      <span>{tabData.name}</span>
-    </div>
   );
 }

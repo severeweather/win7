@@ -1,4 +1,4 @@
-export function WindowControls() {
+export function WindowControls({ minimize, maximize, terminate }) {
   function Button({ src, type, onClick }) {
     return (
       <button
@@ -18,9 +18,9 @@ export function WindowControls() {
 
   return (
     <div className="window-controls">
-      <Button src="/minimize.svg" type="minimize" onClick={() => {}} />
-      <Button src="/maximize.svg" type="maximize" onClick={() => {}} />
-      <Button src="/close.svg" type="close" onClick={() => {}} />
+      <Button src="/minimize.svg" type="minimize" onClick={minimize} />
+      <Button src="/maximize.svg" type="maximize" onClick={maximize} />
+      <Button src="/terminate.svg" type="terminate" onClick={terminate} />
     </div>
   );
 }
