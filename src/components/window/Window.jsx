@@ -23,6 +23,7 @@ export function Window({
   const { focused, setFocused } = useFocus({ namespace: namespace, id: data.id }); // prettier-ignore
   const [scale, setScale] = useState({ w: 900, h: 700 });
   const [position, setPosition] = useState({ x: 200, y: 200 }); // prettier-ignore
+  const [resizing, setResizing] = useState(false);
   const [minScale] = useState({ w: minW, h: minH });
   let dimensions = {
     top: position?.y,
@@ -33,19 +34,21 @@ export function Window({
     minHeight: minScale?.h,
   };
 
-  //
-  // function terminateWindow() {
-  //   setRunningApps((prev) =>
-  //     prev.filter((runningApp) => runningApp.app.id !== appData?.app.id)
-  //   );
-  //   setFocused({ namespace: "desktop", id: null });
-  // }
-  //
-  // function handleMaximize() {
-  //   setScale({ w: desktopWidth - 16, h: desktopHeight - 67 });
-  //   setPosition({ x: 8, y: 8 });
-  // }
-  //
+  function handleTerminate() {
+    setRunningApps((prev) =>
+      prev.filter((runningApp) => runningApp.app.id !== data.id)
+    );
+    setFocused({ namespace: "desktop", id: null });
+  }
+
+  function handleMaximize() {
+    setScale({ w: desktopWidth - 16, h: desktopHeight - 67 });
+    setPosition({ x: 8, y: 8 });
+  }
+
+  function handleMinimize() {
+    callClippy("WIP");
+  }
 
   function handleDrag(e) {
     const initX = e.clientX;
@@ -83,6 +86,8 @@ export function Window({
   }
 
   function handleResize(e, direction) {
+    setResizing(true);
+
     const initX = e.clientX;
     const initY = e.clientY;
     const windowW = windowRef.current.offsetWidth;
@@ -190,6 +195,7 @@ export function Window({
     function mouseUp() {
       document.removeEventListener("mousemove", mouseMove);
       document.removeEventListener("mouseup", mouseUp);
+      setResizing(false);
     }
     document.addEventListener("mousemove", mouseMove);
     document.addEventListener("mouseup", mouseUp);
@@ -199,14 +205,13 @@ export function Window({
     <div
       ref={windowRef}
       style={dimensions}
-      // onClick={() => setFocused({ namespace: namespace, id: appData.app.id })}
-      // className={`window ${ focused.namespace === namespace && focused.id === appData.app.id ? "focused" : "" }`} /* prettier-ignore */
-      className={`window idle`}
+      onClick={() => setFocused({ namespace: namespace, id: data.id })}
+      className={`window ${ focused.namespace === namespace && focused.id === data.id ? "focused" : "idle" }`} /* prettier-ignore */
     >
       <nav
         className="window__navigation"
         onMouseDown={(e) => handleDrag(e)}
-        // onDoubleClick={handleMaximize}
+        onDoubleClick={handleMaximize}
       >
         <div className="window__icon-and-title">
           <div className="window__icon-wrapper">
@@ -217,11 +222,20 @@ export function Window({
           <span className="window__title">{title}</span>
         </div>
 
-        <WindowControls />
+        <WindowControls
+          minimize={handleMinimize}
+          maximize={handleMaximize}
+          terminate={handleTerminate}
+        />
       </nav>
 
       <header className="window__header">{header}</header>
-      <section className="window__content">{children}</section>
+      <section
+        className="window__content"
+        style={{ pointerEvents: resizing ? "none" : "auto" }}
+      >
+        {children}
+      </section>
       <footer className="window__footer">{footer}</footer>
 
       <ResizeHandles handler={handleResize} component={windowRef.current} />

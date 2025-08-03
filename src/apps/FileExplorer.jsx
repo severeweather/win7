@@ -179,8 +179,7 @@ export function FileExplorer({ runningApp }) {
 
   return (
     <Window
-      allowTitle={false}
-      appData={runningApp}
+      data={{ id: runningApp.app.id }}
       header={
         <nav className="fe-navigation">
           <NavArrows />
