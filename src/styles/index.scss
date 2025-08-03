@@ -1,5 +1,4 @@
 @use "colors";
-
 @use "desktop";
 @use "dock";
 @use "contextmenu";
@@ -19,9 +18,9 @@
 *::before,
 *::after {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
   font-size: 1rem;
+  padding: 0;
+  margin: 0;
 }
 
 html,
@@ -35,10 +34,15 @@ body {
 }
 
 button {
-  cursor: pointer;
+  border: none;
+  background: none;
   user-select: none;
+  cursor: pointer;
 }
 
-input {
+input,
+textarea {
+  border: none;
+  background: none;
   outline: none;
 }

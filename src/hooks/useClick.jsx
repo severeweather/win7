@@ -9,7 +9,7 @@ export function useClick() {
   function handleClick({ id = null, namespace, doubleClick }) {
     if (!id) setFocused({ namespace: namespace, id: null });
 
-    let timeout = 150;
+    let timeout = 250;
     clickCount.current++;
 
     if (clickTimeout.current) {

@@ -3,22 +3,22 @@
   height: 100%;
   display: grid;
   grid-template-rows: auto 1fr;
+}
 
-  .photo-viewer__content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-  }
+.photo-viewer__content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
 
-  .photo-viewer__displayed-image {
-    height: 100%;
-    width: auto;
-    object-fit: contain;
-    display: block;
-  }
+.photo-viewer__displayed-image {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  display: block;
 }
 
 .pv-control-panel {
@@ -27,37 +27,37 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  width: fit-content;
+}
 
-  .pv-control-panel__wing {
-    height: 100%;
-    width: 150px;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
+.pv-control-panel__wing {
+  height: 100%;
+  width: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.pv-control-panel__head {
+  height: 100%;
+  display: flex;
+  align-items: center;
+
+  .pv-control-panel__slideshow-button-wrapper {
+    height: 60px;
   }
 
-  .pv-control-panel__head {
-    height: 100%;
-    display: flex;
-    align-items: center;
-
-    .pv-control-panel__slideshow-button-wrapper {
-      height: 60px;
-    }
-
-    .pv-control-panel__arrow-button-wrapper {
-      height: 40px;
-    }
+  .pv-control-panel__arrow-button-wrapper {
+    height: 40px;
   }
+}
 
-  .pv-control-panel__button-wrapper {
-    height: 25px;
+.pv-control-panel__button-wrapper {
+  height: 25px;
 
-    .pv-control-panel__button {
-      height: 100%;
-      width: 100%;
-      object-fit: contain;
-      cursor: pointer;
-    }
+  .pv-control-panel__button {
+    height: 100%;
+    object-fit: contain;
+    cursor: pointer;
   }
 }
