@@ -4,8 +4,10 @@ import { userPreferences } from "../userPreferences";
 import { DockIcon } from "../components/DockIcon";
 import { useRunningApps } from "../context/useRunningApps";
 import { appOrFile } from "../service";
+import { useClippy } from "./Clippy";
 
 function DateTime() {
+  const { callClippy } = useClippy();
   const [now, setNow] = useState(new Date());
 
   useEffect(() => {
@@ -25,7 +27,7 @@ function DateTime() {
   const years = now.getFullYear();
 
   return (
-    <div className="datetime">
+    <div className="datetime" onClick={() => callClippy("WIP")}>
       <div className="datetime__time">{`${hours}:${minutes}:${seconds}`}</div>
       <div className="datetime__date">{`${days}/${months}/${years}`}</div>
     </div>
@@ -33,9 +35,11 @@ function DateTime() {
 }
 
 function NotificationArea() {
-  function NotificationIcon({ src }) {
+  const { callClippy } = useClippy();
+
+  function NotificationIcon({ src, onClick }) {
     return (
-      <div className="notification-area__icon-wrapper">
+      <div className="notification-area__icon-wrapper" onClick={onClick}>
         <img className="notification-area__icon" src={src} alt="" />
       </div>
     );
@@ -43,15 +47,25 @@ function NotificationArea() {
 
   return (
     <div className="notification-area">
-      <NotificationIcon src="/notificationarea-report.svg" />
-      <NotificationIcon src="/notificationarea-volume.svg" />
-      <NotificationIcon src="/notificationarea-internet.svg" />
+      <NotificationIcon
+        src="/notificationarea-report.svg"
+        onClick={() => callClippy("WIP")}
+      />
+      <NotificationIcon
+        src="/notificationarea-volume.svg"
+        onClick={() => callClippy("WIP")}
+      />
+      <NotificationIcon
+        src="/notificationarea-internet.svg"
+        onClick={() => callClippy("WIP")}
+      />
     </div>
   );
 }
 
 function MinimizeAll() {
-  return <div className="minimize-all"></div>;
+  const { callClippy } = useClippy();
+  return <div className="minimize-all" onClick={() => callClippy("WIP")}></div>;
 }
 
 export function Dock() {
