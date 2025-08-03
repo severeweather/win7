@@ -84,7 +84,6 @@ function NavPath({ icons, rootLocation, location }) {
 
 export function FileExplorer({ runningApp }) {
   const namespace = `file-explorer/${runningApp.id}`;
-<<<<<<< HEAD
   const { focused, setFocused } = useFocus();
   const [location, setLocation] = useState("Computer/Desktop/Folderr");
   const rootLocation = location.split("/").filter(Boolean)[0];
