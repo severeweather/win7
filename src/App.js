@@ -64,7 +64,7 @@ function Boot({ onEnd, hide }) {
         <p className="starting-windows__copyright">© Microsoft Corporation</p>
         <video
           ref={videoRef}
-          src="/boot-screen.mp4"
+          src="/boot-screen2.mp4"
           className="starting-windows__boot-screen"
           muted
           autoPlay
