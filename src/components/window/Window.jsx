@@ -208,12 +208,11 @@ export function Window({
       onClick={() => setFocused({ namespace: namespace, id: data.id })}
       className={`window ${ focused.namespace === namespace && focused.id === data.id ? "focused" : "idle" }`} /* prettier-ignore */
     >
-      <nav
-        className="window__navigation"
-        onMouseDown={(e) => handleDrag(e)}
-        onDoubleClick={handleMaximize}
-      >
-        <div className="window__icon-and-title">
+      <nav className="window__navigation" onDoubleClick={handleMaximize}>
+        <div
+          className="window__icon-and-title"
+          onMouseDown={(e) => handleDrag(e)}
+        >
           <div className="window__icon-wrapper">
             {data.icon && (
               <img src={data.icon} className="window__icon" alt="" />

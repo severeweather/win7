@@ -100,11 +100,13 @@
   .datetime__time {
     color: white;
     font-size: 1.2rem;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
   }
 
   .datetime__date {
     font-size: 1.2rem;
     color: white;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
   }
 }
 
