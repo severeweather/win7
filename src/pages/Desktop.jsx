@@ -7,6 +7,7 @@ import { arrangeDesktopIcons, appOrFile, isEmpty } from "../service";
 import { useSize } from "../hooks/useSize";
 import { Icon } from "../components/Icon";
 import { useClick } from "../hooks/useClick";
+import { StartMenu } from "../components/StartButton";
 
 import { createContext, useContext } from "react";
 
@@ -26,10 +27,16 @@ export function Desktop() {
   const desktopGridRef = useRef(null);
   const { width: desktopGridWidth, height: desktopGridHeight } = useSize(desktopGridRef); //prettier-ignore
   const { width: desktopWidth, height: desktopHeight } = useSize(desktopRef);
-  const { focused } = useFocus({ namespace: namespace, id: null });
+  const { focused, setFocused } = useFocus({ namespace: namespace, id: null });
   const [desktopEntities, setDesktopEntities] = useState();
   const { runningApps, runApp } = useRunningApps();
+  const [startMenu, setStartMenu] = useState(true);
   const handleClick = useClick();
+
+  function toggleStartMenu() {
+    setStartMenu((prev) => (prev ? false : true));
+    setFocused({ namespace: namespace, id: "startmenu" });
+  }
 
   function doubleClick(id) {
     const { app, data } = appOrFile(id);
@@ -47,7 +54,10 @@ export function Desktop() {
   return (
     <>
       <div ref={desktopRef} id="desktop">
-        <DesktopProvider value={{ desktopWidth, desktopHeight }}>
+        <DesktopProvider
+          value={{ desktopWidth, desktopHeight, startMenu, toggleStartMenu }}
+        >
+          {startMenu & (focused.id === "startmenu") ? <StartMenu /> : <></>}
           <div id="apps">
             {Array.from(runningApps).length > 0 ? (
               runningApps.map((runningApp, key) => {
@@ -90,9 +100,9 @@ export function Desktop() {
               );
             })}
           </div>
+          <Dock />
         </DesktopProvider>
       </div>
-      <Dock />
     </>
   );
 }
