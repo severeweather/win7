@@ -25,9 +25,6 @@ function preloadMedia(files) {
 }
 
 function Boot({ onEnd, hide }) {
-  const [booted, setBooted] = useState(() => {
-    return localStorage.getItem("booted") === "true";
-  });
   const [startingWindows, setStartingWindows] = useState(true);
   const [welcome, setWelcome] = useState(false);
   const [wait, setWait] = useState(true);
@@ -104,7 +101,7 @@ function Boot({ onEnd, hide }) {
 }
 
 function App() {
-  const [booted, setBooted] = useState(() => {
+  const [booted] = useState(() => {
     return localStorage.getItem("booted") === "true";
   });
   const [bootEnded, setBootEnded] = useState(false);
@@ -120,10 +117,10 @@ function App() {
 
   useEffect(() => {
     preloadMedia([
-      "widows7wallpaper.jpg",
-      "iexplorer.png",
-      "fileexplorer.png",
-      "notepadicon.png",
+      "/widows7wallpaper.jpg",
+      "/iexplorer.png",
+      "/fileexplorer.png",
+      "/notepadicon.png",
     ]);
   }, []);
 
