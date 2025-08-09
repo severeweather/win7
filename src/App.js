@@ -5,6 +5,7 @@ import { FocusProvider } from "./context/useFocus";
 import { RunningAppsProvider } from "./context/useRunningApps";
 import { useEffect, useRef, useState } from "react";
 import { Clippy, ClippyContextProvider } from "./components/Clippy";
+import { Welcome } from "./components/Welcome";
 
 function preloadMedia(files) {
   return Promise.all(
@@ -105,6 +106,7 @@ function App() {
     return localStorage.getItem("booted") === "true";
   });
   const [bootEnded, setBootEnded] = useState(false);
+  const [welcome, setWelcome] = useState(false);
 
   useEffect(() => {
     if (!bootEnded) return;
@@ -127,6 +129,19 @@ function App() {
   return (
     <>
       {!booted ? (
+        welcome ? (
+          <Boot
+            onEnd={() => {
+              setBootEnded(true);
+              localStorage.setItem("booted", "true");
+            }}
+            hide={bootEnded}
+          />
+        ) : (
+          <Welcome onClick={() => setWelcome(true)} />
+        )
+      ) : null}
+      {/* {!booted ? (
         <Boot
           onEnd={() => {
             setBootEnded(true);
@@ -136,7 +151,7 @@ function App() {
         />
       ) : (
         <></>
-      )}
+      )} */}
       <div className={`app-wrapper ${bootEnded || booted ? "" : "inactive"}`}>
         <FocusProvider>
           <RunningAppsProvider>

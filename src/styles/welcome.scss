@@ -1,0 +1,99 @@
+.welcome {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+}
+
+.welcome__content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.welcome__button {
+  position: relative;
+  margin: auto;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  width: fit-content;
+  height: 48px;
+
+  @keyframes glowup {
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes glowdown {
+    to {
+      opacity: 0;
+    }
+  }
+
+  &:hover {
+    .welcome__button-image-normal {
+      animation: glowdown 0.5s ease forwards;
+    }
+
+    .welcome__button-image-glow {
+      animation: glowup 0.2s ease forwards;
+    }
+  }
+
+  .welcome__button-text {
+    display: block;
+    color: white;
+    font-size: 3rem;
+    font-style: italic;
+  }
+
+  .welcome__button-image-wrapper {
+    position: relative;
+    display: block;
+    height: 100%;
+    aspect-ratio: 1 / 1;
+
+    .welcome__button-image {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      height: 100%;
+      width: 100%;
+      object-fit: contain;
+    }
+
+    .welcome__button-image-normal {
+      opacity: 1;
+    }
+
+    .welcome__button-image-glow {
+      opacity: 0;
+    }
+  }
+}
+
+.welcome__caption {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.welcome__italic {
+  font-style: italic;
+}
+
+.welcome__paragraph {
+  display: block;
+  margin: auto;
+  width: 400px;
+  text-align: center;
+  color: white;
+  line-height: 2rem;
+}
