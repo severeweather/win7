@@ -35,6 +35,7 @@
 }
 
 .start-menu {
+  z-index: 1000;
   display: grid;
   grid-template-columns: auto 45%;
   gap: 8px;

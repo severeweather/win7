@@ -25,6 +25,7 @@
 }
 
 .booter {
+  user-select: none;
   position: fixed;
   z-index: 1000;
   height: 100vh;

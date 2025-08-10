@@ -141,17 +141,6 @@ function App() {
           <Welcome onClick={() => setWelcome(true)} />
         )
       ) : null}
-      {/* {!booted ? (
-        <Boot
-          onEnd={() => {
-            setBootEnded(true);
-            localStorage.setItem("booted", "true");
-          }}
-          hide={bootEnded}
-        />
-      ) : (
-        <></>
-      )} */}
       <div className={`app-wrapper ${bootEnded || booted ? "" : "inactive"}`}>
         <FocusProvider>
           <RunningAppsProvider>
